@@ -10,11 +10,13 @@ export interface Book {
   coverColor:   string;
   spineColor:   string;
   glowColor:    string;
+  coverImage?:  string;   // real cover photo path
   amazonUrl:    string;
   description:  string;
   descriptionEn?: string;
   categoryEs:   string;
   categoryEn:   string;
+  hasLiveBook?: boolean;  // shows "Libro Vivo" button
   comingSoon?:  boolean;
 }
 
@@ -25,14 +27,15 @@ export const BOOKS: Book[] = [
     titleEn:  'Between Two Worlds, Vol. I',
     subtitle: 'El Poder del Kadish y el Rugido del León',
     series:   'Navegando por el Océano del Infinito',
-    edition:  '2.ª edición',
-    year:     2023,
-    coverColor: '#0f1520', spineColor: '#080e17', glowColor: '#4a6fa5',
+    edition:  '2.ª edición', year: 2023,
+    coverColor: '#0d1422', spineColor: '#080e18', glowColor: '#3a5a8a',
+    coverImage: '/covers/entre-dos-mundos.jpg',
     amazonUrl: 'https://www.amazon.com/author/andrewmyer',
     categoryEs: 'Testimonio · Teología',
     categoryEn: 'Testimony · Theology',
-    description: 'Crónica de una odisea espiritual que comenzó en una Unidad de Cuidados Intensivos durante la pandemia de COVID-19. El autor relata su travesía a través de las dimensiones de las tinieblas y la gloria celestial mientras su cuerpo permanecía en coma, presentando un testimonio de la soberanía de Adonay sobre la vida y la muerte.',
-    descriptionEn: 'Chronicle of a spiritual odyssey that began in an Intensive Care Unit during the COVID-19 pandemic. The author recounts his journey through the dimensions of darkness and celestial glory while his body remained in a coma, presenting a testimony of Adonay\'s sovereignty over life and death.',
+    hasLiveBook: true,
+    description: 'Crónica de una odisea espiritual que comenzó en una Unidad de Cuidados Intensivos durante la pandemia de COVID-19. El autor relata su travesía a través de las dimensiones de las tinieblas y la gloria celestial mientras su cuerpo permanecía en coma.',
+    descriptionEn: 'Chronicle of a spiritual odyssey that began in an Intensive Care Unit during the COVID-19 pandemic. The author recounts his journey through the dimensions of darkness and celestial glory while his body remained in a coma.',
   },
   {
     id: 'el-renacido',
@@ -41,12 +44,13 @@ export const BOOKS: Book[] = [
     subtitle: 'Un Viaje desde la Muerte hacia la Libertad del Alma',
     series:  'Navegando por el Océano del Infinito',
     year:    2023,
-    coverColor: '#12100a', spineColor: '#0a0805', glowColor: '#8a7040',
+    coverColor: '#0a1010', spineColor: '#060a0a', glowColor: '#4a8070',
+    coverImage: '/covers/renacido.jpg',
     amazonUrl: 'https://www.amazon.com/author/andrewmyer',
     categoryEs: 'Testimonio · Psicología Espiritual',
     categoryEn: 'Testimony · Spiritual Psychology',
-    description: 'Documentación de la experiencia de resurrección personal del autor tras su crisis de salud. Analiza los mecanismos que aprisionan al ser humano y el proceso de recuperación de la libertad del alma tras la experiencia del umbral de la muerte.',
-    descriptionEn: 'Documentation of the author\'s personal experience of resurrection following his health crisis. Analyses the mechanisms that imprison the human being and the process of recovering the freedom of the soul after the near-death experience.',
+    description: 'Documentación de la experiencia de resurrección personal del autor tras su crisis de salud. Analiza los mecanismos que aprisionan al ser humano y el proceso de recuperación de la libertad del alma.',
+    descriptionEn: 'Documentation of the author\'s personal resurrection experience following his health crisis. Analyses the mechanisms that imprison human beings and the process of recovering freedom of the soul.',
   },
   {
     id: 'narcisismo-cristalizacion',
@@ -54,14 +58,14 @@ export const BOOKS: Book[] = [
     titleEn: 'Narcissism: The First Law of Crystallization',
     subtitle: 'Una aproximación teológico-psicoanalítica',
     series:  'Navegando por el Océano del Infinito',
-    isbn:    '9798311562621',
-    year:    2024,
-    coverColor: '#100a05', spineColor: '#080603', glowColor: '#9e7828',
+    isbn:    '9798311562621', year: 2024,
+    coverColor: '#050d18', spineColor: '#030810', glowColor: '#3a7a90',
+    coverImage: '/covers/narcisismo.jpg',
     amazonUrl: 'https://www.amazon.com/author/andrewmyer',
     categoryEs: 'Psicología · Teología · Filosofía',
     categoryEn: 'Psychology · Theology · Philosophy',
-    description: 'Exploración del narcisismo no solo como trastorno psicológico, sino como fuerza metafísica primordial presente desde los albores de la creación. La obra analiza la autoidolatría como fundamento del pecado original, integrando análisis de textos sagrados, interpretaciones místicas y psicología moderna.',
-    descriptionEn: 'Exploration of narcissism not merely as a psychological disorder but as a primordial metaphysical force present since the dawn of creation. The work analyses self-idolatry as the foundation of original sin, integrating analysis of sacred texts, mystical interpretations and modern psychology.',
+    description: 'Exploración del narcisismo no solo como trastorno psicológico, sino como fuerza metafísica primordial presente desde los albores de la creación. Integra análisis de textos sagrados, interpretaciones místicas y psicología moderna.',
+    descriptionEn: 'Exploration of narcissism not merely as a psychological disorder but as a primordial metaphysical force. Integrates analysis of sacred texts, mystical interpretations and modern psychology.',
   },
   {
     id: 'espejo-quebrado',
@@ -70,12 +74,13 @@ export const BOOKS: Book[] = [
     subtitle: 'Narcisismo metafísico y la Homosexualidad como eco de la Caída Angelical',
     series:  'Navegando por el Océano del Infinito',
     year:    2024,
-    coverColor: '#0a0515', spineColor: '#06030e', glowColor: '#6040a0',
+    coverColor: '#0a0510', spineColor: '#06030a', glowColor: '#7050a0',
+    coverImage: '/covers/espejo-quebrado.jpg',
     amazonUrl: 'https://www.amazon.com/author/andrewmyer',
     categoryEs: 'Teología · Psicoanálisis · Ética',
     categoryEn: 'Theology · Psychoanalysis · Ethics',
-    description: 'Expansión de la investigación sobre el narcisismo metafísico. Propone que ciertos patrones de deseo, cuando surgen de un fundamento narcisista, son manifestaciones contemporáneas de una inversión primordial. Utiliza análisis detallado de textos hebreos y teorías psicoanalíticas para conectar la metafísica con la psicología profunda.',
-    descriptionEn: 'An expansion of the research on metaphysical narcissism. Proposes that certain patterns of desire, when arising from a narcissistic foundation, are contemporary manifestations of a primordial inversion. Uses detailed analysis of Hebrew texts and psychoanalytic theory to connect metaphysics with depth psychology.',
+    description: 'Expansión de la investigación sobre el narcisismo metafísico. Propone que ciertos patrones de deseo son manifestaciones contemporáneas de una inversión primordial. Utiliza análisis de textos hebreos y teorías psicoanalíticas.',
+    descriptionEn: 'An expansion of the research on metaphysical narcissism, proposing that certain patterns of desire are contemporary manifestations of a primordial inversion.',
   },
   {
     id: 'jesucristo-leon-juda',
@@ -84,11 +89,12 @@ export const BOOKS: Book[] = [
     subtitle: 'El Tzimtzum Divino y la Revelación Trinitaria',
     series:  'Teología Sistemática',
     year:    2024,
-    coverColor: '#08100a', spineColor: '#050a06', glowColor: '#4a7a50',
+    coverColor: '#080e05', spineColor: '#050903', glowColor: '#5a8040',
+    coverImage: '/covers/jesucristo.png',
     amazonUrl: 'https://www.amazon.com/author/andrewmyer',
     categoryEs: 'Teología Sistemática · Cristología · Cábala',
     categoryEn: 'Systematic Theology · Christology · Kabbalah',
-    description: 'Desarrollo teológico y académico sobre la cristianización del Tzimtzum cabalístico. Propone que esta "contracción divina" es el movimiento por el cual el Dios infinito genera el espacio ontológico para la creación finita. Integra conceptos de física cuántica y cosmología como analogías para explicar el misterio de la Trinidad y la Encarnación.',
-    descriptionEn: 'Theological and academic development on the Christianisation of the Kabbalistic Tzimtzum. Proposes that this "divine contraction" is the movement by which the infinite God generates the ontological space for finite creation. Integrates concepts from quantum physics and cosmology as analogies to explain the mystery of the Trinity and the Incarnation.',
+    description: 'Desarrollo teológico y académico sobre la cristianización del Tzimtzum cabalístico. Propone que la "contracción divina" es el movimiento por el cual Dios infinito genera el espacio ontológico para la creación finita.',
+    descriptionEn: 'Theological and academic development on the Christianisation of the Kabbalistic Tzimtzum, proposing it as the movement by which the infinite God generates the ontological space for finite creation.',
   },
 ];
