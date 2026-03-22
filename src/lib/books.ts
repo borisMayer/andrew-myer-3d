@@ -75,7 +75,7 @@ export const BOOKS: Book[] = [
     series:  'Navegando por el Océano del Infinito',
     year:    2024,
     coverColor: '#0a0510', spineColor: '#06030a', glowColor: '#7050a0',
-    coverImage: '/covers/espejo-quebrado.jpg',
+    coverImage: '/covers/espejo-quebrado.png',
     amazonUrl: 'https://www.amazon.com/author/andrewmyer',
     categoryEs: 'Teología · Psicoanálisis · Ética',
     categoryEn: 'Theology · Psychoanalysis · Ethics',
