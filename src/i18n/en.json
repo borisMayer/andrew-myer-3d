@@ -1,0 +1,102 @@
+{
+  "nav": {
+    "home": "Home",
+    "author": "The Author",
+    "books": "Books",
+    "thought": "Thought",
+    "excerpts": "Excerpts",
+    "contact": "Contact",
+    "language": "Language"
+  },
+  "hero": {
+    "series": "Voyaging Across the Boundless Sea",
+    "subtitle": "Spiritual and metaphysical author. Revelations from beyond\nthat transform the understanding of existence.",
+    "cta_books": "Explore the Work",
+    "cta_author": "Meet the Author",
+    "scroll": "Discover"
+  },
+  "author": {
+    "label": "The Author",
+    "title": "A life on the threshold of the invisible",
+    "title_em": "threshold of the invisible",
+    "bio_1": "Andrew Myer experienced a deep connection with the spiritual world from an early age.",
+    "bio_2": "His near-death experience during the COVID-19 pandemic revealed extraordinary truths about realities beyond the physical world.",
+    "bio_3": "Trained in theology, philosophy, and psychology, he dedicates his life to sharing the teachings received from the other side.",
+    "quote": "\"The truths I brought back from the other side cannot be silenced. The universe insists they be shared.\"",
+    "photo_caption": "Andrew Myer — Author",
+    "tags": ["Theology", "Metaphysics", "Philosophy", "Spiritual Psychology", "Near-Death Experiences"]
+  },
+  "thought": {
+    "label": "Thought & Influences",
+    "title": "Academic and intellectual roots",
+    "subtitle": "An interdisciplinary synthesis of classical philosophy, theology, and modern psychology.",
+    "pillars": [
+      {
+        "icon": "◈",
+        "title": "Platonic and Aristotelian Philosophy",
+        "body": "The search for the eternal within the temporal. The world of Ideas as the substrate of visible reality. Aristotle's notion of the soul as the form of the body, reinterpreted through mystical experience."
+      },
+      {
+        "icon": "✦",
+        "title": "Christian and Esoteric Theology",
+        "body": "The angelic fall as a metaphysical archetype. Redemption as a process of spiritual crystallization. Influences from Rhenish mysticism, Christian Kabbalah, and apophatic theology."
+      },
+      {
+        "icon": "◇",
+        "title": "Psychology of the Ego and the Self",
+        "body": "Narcissism as an ontological structure, not merely clinical. Jung, the collective unconscious, and archetypes. The near-death experience as ego disruption and threshold of the Self."
+      }
+    ],
+    "quote_author": "Andrew Myer",
+    "central_quote": "\"Narcissism is not merely an individual pathology: it is the primordial law by which the universe contemplates itself and crystallizes matter.\""
+  },
+  "books": {
+    "label": "The Work",
+    "title": "Book Catalog",
+    "subtitle": "Each work is a door toward a deeper understanding of existence.",
+    "buy": "Buy on Amazon",
+    "rotate_hint": "Drag to rotate",
+    "explore_360": "Explore in 360°",
+    "discover": "Discover the energy",
+    "coming_soon": "Coming Soon",
+    "placeholder_title": "New Work",
+    "placeholder_desc": "A new work in preparation. Pure theology, philosophy, or spiritual psychology."
+  },
+  "excerpts": {
+    "label": "Featured Excerpts",
+    "title": "Fragments of the Work",
+    "subtitle": "Words that open dimensions.",
+    "items": [
+      {
+        "book": "The Broken Mirror",
+        "text": "\"Metaphysical narcissism is not man's self-love: it is the movement by which light bends upon itself and generates the illusion of an observer separate from the universe.\""
+      },
+      {
+        "book": "The Reborn",
+        "text": "\"Death is not a door closing. It is a mirror shattering — and in the fragments, for the first time, you see the whole.\""
+      },
+      {
+        "book": "Narcissism: The First Law",
+        "text": "\"Before there was matter, before there was light, there was an act: the infinite contemplated itself. That is the First Law of Crystallization.\""
+      }
+    ]
+  },
+  "newsletter": {
+    "label": "Stay Connected",
+    "title": "Receive revelations",
+    "subtitle": "New works, reflections, and teachings directly to your inbox.",
+    "placeholder": "Your email address",
+    "button": "Subscribe",
+    "privacy": "No spam. Only revelations."
+  },
+  "contact": {
+    "label": "Contact",
+    "title": "Do you have something to share?",
+    "subtitle": "For inquiries about the work, lectures, or academic collaborations.",
+    "name_placeholder": "Your name",
+    "email_placeholder": "Your email",
+    "message_placeholder": "Your message...",
+    "send": "Send message",
+    "sending": "Sending..."
+  }
+}

@@ -1,0 +1,102 @@
+{
+  "nav": {
+    "home": "Inicio",
+    "author": "El Autor",
+    "books": "Libros",
+    "thought": "Pensamiento",
+    "excerpts": "Extractos",
+    "contact": "Contacto",
+    "language": "Idioma"
+  },
+  "hero": {
+    "series": "Navegando por el Océano del Infinito",
+    "subtitle": "Autor espiritual y metafísico. Revelaciones del más allá\nque transforman la comprensión de la existencia.",
+    "cta_books": "Explorar la Obra",
+    "cta_author": "Conocer al Autor",
+    "scroll": "Descubre"
+  },
+  "author": {
+    "label": "El Autor",
+    "title": "Una vida en el umbral de lo invisible",
+    "title_em": "umbral de lo invisible",
+    "bio_1": "Andrew Myer experimentó una conexión profunda con el mundo espiritual desde temprana edad.",
+    "bio_2": "Su experiencia cercana a la muerte durante la pandemia de COVID-19 le reveló verdades extraordinarias sobre las realidades más allá del mundo físico.",
+    "bio_3": "Formado en teología, filosofía y psicología, dedica su vida a compartir las enseñanzas recibidas del otro lado.",
+    "quote": "\"Las verdades que traje del otro lado no pueden ser calladas. El universo insiste en que sean compartidas.\"",
+    "photo_caption": "Andrew Myer — Autor",
+    "tags": ["Teología", "Metafísica", "Filosofía", "Psicología Espiritual", "Experiencias de Muerte"]
+  },
+  "thought": {
+    "label": "Pensamiento e Influencias",
+    "title": "Raíces académicas e intelectuales",
+    "subtitle": "Una síntesis interdisciplinaria entre la filosofía clásica, la teología y la psicología moderna.",
+    "pillars": [
+      {
+        "icon": "◈",
+        "title": "Filosofía Platónica y Aristotélica",
+        "body": "La búsqueda de lo eterno en lo temporal. El mundo de las Ideas como sustrato de la realidad visible. La noción aristotélica del alma como forma del cuerpo reinterpretada desde la experiencia mística."
+      },
+      {
+        "icon": "✦",
+        "title": "Teología Cristiana y Esotérica",
+        "body": "La caída angelical como arquetipo metafísico. La redención como proceso de cristalización espiritual. Influencias de la mística renana, la cábala cristiana y la teología apofática."
+      },
+      {
+        "icon": "◇",
+        "title": "Psicología del Ego y del Ser",
+        "body": "El narcisismo como estructura ontológica, no solo clínica. Jung, el inconsciente colectivo y los arquetipos. La experiencia cercana a la muerte como disrupción del ego y umbral del Ser."
+      }
+    ],
+    "quote_author": "Andrew Myer",
+    "central_quote": "\"El narcisismo no es solo una patología del individuo: es la ley primordial por la que el universo se contempla a sí mismo y cristaliza la materia.\""
+  },
+  "books": {
+    "label": "La Obra",
+    "title": "Catálogo de Libros",
+    "subtitle": "Cada obra es una puerta hacia una comprensión más profunda de la existencia.",
+    "buy": "Comprar en Amazon",
+    "rotate_hint": "Arrastra para rotar",
+    "explore_360": "Explora en 360°",
+    "discover": "Descubre la energía",
+    "coming_soon": "Próximamente",
+    "placeholder_title": "Nueva Obra",
+    "placeholder_desc": "Un nuevo trabajo en preparación. Teología, filosofía o psicología espiritual pura."
+  },
+  "excerpts": {
+    "label": "Extractos Destacados",
+    "title": "Fragmentos de la Obra",
+    "subtitle": "Palabras que abren dimensiones.",
+    "items": [
+      {
+        "book": "El Espejo Quebrado",
+        "text": "\"El narcisismo metafísico no es el amor propio del hombre: es el movimiento por el cual la luz se dobla sobre sí misma y genera la ilusión de un observador separado del universo.\""
+      },
+      {
+        "book": "The Reborn",
+        "text": "\"Death is not a door closing. It is a mirror shattering — and in the fragments, for the first time, you see the whole.\""
+      },
+      {
+        "book": "Narcisismo: La Primera Ley",
+        "text": "\"Antes de que hubiera materia, antes de que hubiera luz, hubo un acto: el infinito se contempló a sí mismo. Esa es la Primera Ley de la Cristalización.\""
+      }
+    ]
+  },
+  "newsletter": {
+    "label": "Mantenerse Conectado",
+    "title": "Recibe revelaciones",
+    "subtitle": "Nuevas obras, reflexiones y enseñanzas directamente en tu correo.",
+    "placeholder": "Tu correo electrónico",
+    "button": "Suscribirme",
+    "privacy": "Sin spam. Solo revelaciones."
+  },
+  "contact": {
+    "label": "Contacto",
+    "title": "¿Tienes algo que compartir?",
+    "subtitle": "Para consultas sobre la obra, conferencias o colaboraciones académicas.",
+    "name_placeholder": "Tu nombre",
+    "email_placeholder": "Tu correo",
+    "message_placeholder": "Tu mensaje...",
+    "send": "Enviar mensaje",
+    "sending": "Enviando..."
+  }
+}
