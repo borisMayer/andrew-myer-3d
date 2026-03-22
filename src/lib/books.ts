@@ -29,7 +29,7 @@ export const BOOKS: Book[] = [
     series:   'Navegando por el Océano del Infinito',
     edition:  '2.ª edición', year: 2023,
     coverColor: '#0d1422', spineColor: '#080e18', glowColor: '#3a5a8a',
-    coverImage: '/covers/entre-dos-mundos.jpg',
+    coverImage: '/covers/entre-dos-mundos.png',
     amazonUrl: 'https://www.amazon.com/author/andrewmyer',
     categoryEs: 'Testimonio · Teología',
     categoryEn: 'Testimony · Theology',
