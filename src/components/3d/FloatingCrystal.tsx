@@ -79,7 +79,7 @@ export default function FloatingCrystal({
 export function CrystalCluster({ position }: { position: [number, number, number] }) {
   const crystals = useMemo(() =>
     Array.from({ length: 5 }, (_, i) => ({
-      pos: [
+      position: [
         position[0] + (Math.random() - 0.5) * 2,
         position[1] + (Math.random() - 0.5) * 1.5,
         position[2] + (Math.random() - 0.5) * 1.5,
