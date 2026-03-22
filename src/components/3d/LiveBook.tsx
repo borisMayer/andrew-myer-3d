@@ -312,7 +312,7 @@ export default function LiveBook({ bookId, coverSrc, title, onClose }: LiveBookP
 
   return (
     <div style={{
-      position:'fixed', inset:0, zIndex:300,
+      position:'fixed', inset:0, zIndex:9999,
       background:'#0e0b05',
       display:'flex', flexDirection:'column',
       fontFamily:"'EB Garamond', Georgia, serif",
@@ -324,6 +324,7 @@ export default function LiveBook({ bookId, coverSrc, title, onClose }: LiveBookP
         padding:'0.8rem 2rem', flexShrink:0,
         borderBottom:'1px solid rgba(255,255,255,0.05)',
         background:'rgba(14,11,5,0.98)',
+        position:'relative', zIndex:500,
       }}>
         <div style={{ display:'flex', alignItems:'center', gap:'0.9rem' }}>
           <span style={{ fontFamily:"'Inter', sans-serif", fontSize:'8px', letterSpacing:'0.2em', textTransform:'uppercase', color:'rgba(180,155,90,0.45)' }}>
