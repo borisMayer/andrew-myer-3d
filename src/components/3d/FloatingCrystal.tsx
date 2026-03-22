@@ -59,9 +59,9 @@ export default function GeometricAccent({
 
 export function CrystalCluster({ position }: { position: [number, number, number] }) {
   const items = [
-    { pos: [position[0]-0.8, position[1]+0.5, position[2]]    as [number,number,number], color:'#b4946a', scale:0.6, speed:0.7, offset:0 },
-    { pos: [position[0]+0.6, position[1]-0.3, position[2]+0.3] as [number,number,number], color:'#8090a8', scale:0.5, speed:0.9, offset:1 },
-    { pos: [position[0],     position[1]+0.8, position[2]-0.2] as [number,number,number], color:'#6a7a90', scale:0.4, speed:1.1, offset:2 },
+    { position: [position[0]-0.8, position[1]+0.5, position[2]]    as [number,number,number], color:'#b4946a', scale:0.6, speed:0.7, offset:0 },
+    { position: [position[0]+0.6, position[1]-0.3, position[2]+0.3] as [number,number,number], color:'#8090a8', scale:0.5, speed:0.9, offset:1 },
+    { position: [position[0],     position[1]+0.8, position[2]-0.2] as [number,number,number], color:'#6a7a90', scale:0.4, speed:1.1, offset:2 },
   ];
   return <>{items.map((c,i) => <GeometricAccent key={i} {...c} />)}</>;
 }
