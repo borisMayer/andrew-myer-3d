@@ -24,7 +24,15 @@
     "bio_3": "He resides and practises in Chile. His work encompasses engineering consultancy, independent clinical practice and academic direction of the Reformed Seminary, with intellectual and institutional outreach towards Europe and the Mediterranean world.",
     "quote": "\"This synthesis, developed over years of clinical practice and theoretical reflection, constitutes an original proposition in the field of psychology with a philosophical and spiritual orientation.\"",
     "photo_caption": "Andrew Myer",
-    "tags": ["Systematic Theology", "Lacanian Psychoanalysis", "Logotherapy", "Reformed Theology", "Hebrew Mysticism", "Patristics", "Industrial Engineering"]
+    "tags": [
+      "Systematic Theology",
+      "Lacanian Psychoanalysis",
+      "Logotherapy",
+      "Reformed Theology",
+      "Hebrew Mysticism",
+      "Patristics",
+      "Industrial Engineering"
+    ]
   },
   "thought": {
     "label": "Research Areas",
@@ -69,16 +77,44 @@
     "subtitle": "Representative passages from the published works.",
     "items": [
       {
-        "book": "Narcissism: The First Law of Crystallization",
-        "text": "\"Narcissism transcends mere modern psychological categorisation to reveal itself as a fundamental metaphysical force present since the dawn of creation. It is not simply a personality disorder catalogued in diagnostic manuals, but a primordial force that has affected both celestial and earthly beings, manifesting as a universal pattern of self-destruction that traverses time and dimensions.\""
-      },
-      {
-        "book": "Between Two Worlds, Vol. I",
-        "text": "\"This book is, at the same time, a warning and a source of hope. A warning about the forces that operate in the shadows of our civilisation with an organisation and an antiquity that surpass any human conspiracy. And an unshakeable hope in the absolute sovereignty of Adonay over all creation.\""
-      },
-      {
         "book": "Between Two Worlds, Vol. I — Prologue",
-        "text": "\"What happened afterwards has no name in any language I know. It was not a dream, not a hallucination, not the delirium of a collapsing body. It was, with a clarity that still astonishes me, the most real experience of my entire life. This book is the attempt to tell it.\""
+        "text": "«There is a moment when the body stops obeying. It is not dramatic, at least not as one imagines. There is no sudden darkness, no curtain falling. It is more like when the sound of a full room goes silent all at once: one instant everything is there, and the next there is nothing left to hold on to.»"
+      },
+      {
+        "book": "Between Two Worlds, Vol. I — Preface",
+        "text": "«What my eyes saw beyond the veil —the hierarchies that govern the shadows, the extraordinary light that emanates from the throne of Adonay, the true nature of what inhabits the invisible dimensions of our reality— seemed too vast for human language.»"
+      },
+      {
+        "book": "Between Two Worlds, Vol. I — The return",
+        "text": "«I had learned, on the threshold between life and death, that the pain of the body and the peace of the soul can coexist. Not as a contradiction that resolves itself, but as a paradox that is inhabited.»"
+      },
+      {
+        "book": "Narcissism: The First Law of Crystallization — Introduction",
+        "text": "«From the Greek myth of Narcissus to the fall of the Cherub in the Hebrew tradition, these narratives provide us with a detailed map of how self-consciousness can transform into self-obsession, and how self-love can become self-destruction.»"
+      },
+      {
+        "book": "Narcissism: The First Law of Crystallization — The universal pattern",
+        "text": "«The fall of the Cherub was not simply an isolated event in cosmic history, but established an archetypal pattern that would resonate throughout all subsequent creation. This pattern —perfection that turns upon itself— is the First Law of Crystallisation.»"
+      },
+      {
+        "book": "The Reborn — Testimony",
+        "text": "«I saw my own death multiple times, in different scenarios, as if God were showing me possible paths my life could take depending on choices I had not yet made. Not as a threat, but as a cartography of freedom.»"
+      },
+      {
+        "book": "The Reborn — The return",
+        "text": "«That vehicle was not a body in critical condition: it was a soul descending from the celestial heights back into the flesh, traversing the liminal space that separates the eternal kingdom from the earthly plane, that invisible strip where dimensions touch and where the forces operating in both can act simultaneously.»"
+      },
+      {
+        "book": "Jesus Christ, The Lion of Judah — The Divine Tzimtzum",
+        "text": "«The Tallit represents Or Makif —Surrounding Light—, the protective presence of God that surrounds the soul before it descends into the physical body. In this Kabbalistic concept we find the key to understanding how the infinite God generates the ontological space for finite creation.»"
+      },
+      {
+        "book": "The Broken Mirror — Psychoanalysis and metaphysics",
+        "text": "«Its effectiveness lies in the fact that it operates simultaneously on the physical and spiritual plane, affecting both the body and the soul of the one who receives it, creating specific emotional and spiritual states with an efficiency that few in the physical world recognise for what it is.»"
+      },
+      {
+        "book": "Between Two Worlds, Vol. I — The interior certitude",
+        "text": "«The answer came not as an argument I could rebut or accept at my discretion, but as a certainty that settled in me with the same authority with which all true certainties arrive: from within, from that place where the Spirit speaks without need of words but with a clarity that exceeds any word.»"
       }
     ]
   },

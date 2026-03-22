@@ -24,7 +24,15 @@
     "bio_3": "Reside y ejerce en Chile. Su labor abarca simultáneamente la consultoría en ingeniería, la práctica clínica independiente y la dirección académica del Seminario Reformado, con proyección intelectual e institucional hacia Europa y el mundo mediterráneo.",
     "quote": "\"Esta síntesis, desarrollada a lo largo de años de ejercicio clínico y reflexión teórica, constituye una propuesta original en el ámbito de la psicología con orientación filosófica y espiritual.\"",
     "photo_caption": "Andrew Myer",
-    "tags": ["Teología Sistemática", "Psicoanálisis Lacaniano", "Logoterapia", "Teología Reformada", "Mística Hebrea", "Patrística", "Ingeniería Industrial"]
+    "tags": [
+      "Teología Sistemática",
+      "Psicoanálisis Lacaniano",
+      "Logoterapia",
+      "Teología Reformada",
+      "Mística Hebrea",
+      "Patrística",
+      "Ingeniería Industrial"
+    ]
   },
   "thought": {
     "label": "Líneas de Investigación",
@@ -69,16 +77,44 @@
     "subtitle": "Pasajes representativos de la obra.",
     "items": [
       {
-        "book": "Narcisismo: La Primera Ley de la Cristalización",
-        "text": "\"El narcisismo trasciende la mera categorización psicológica moderna para revelarse como una fuerza metafísica fundamental presente desde los albores de la creación. No es simplemente un trastorno de personalidad catalogado en manuales diagnósticos, sino una fuerza primordial que ha afectado tanto a seres celestiales como terrenales.\""
-      },
-      {
-        "book": "Entre Dos Mundos, Vol. I",
-        "text": "\"Este libro es, al mismo tiempo, una advertencia y una fuente de esperanza. Una advertencia sobre las fuerzas que operan en las sombras de nuestra civilización con una organización y una antigüedad que superan cualquier conspiración humana. Y una esperanza inquebrantable en la soberanía absoluta de Adonay sobre toda la creación.\""
-      },
-      {
         "book": "Entre Dos Mundos, Vol. I — Prólogo",
-        "text": "\"Lo que ocurrió después no tiene nombre en ningún idioma que conozca. No fue un sueño, no fue una alucinación, no fue el delirio de un cuerpo en colapso. Fue, con una claridad que todavía me asombra, la experiencia más real de toda mi vida. Este libro es el intento de contarla.\""
+        "text": "«Hay un momento en que el cuerpo deja de obedecer. No es dramático, al menos no como uno imagina. No hay oscuridad repentina ni cortina que caiga. Es más parecido a cuando el sonido de una habitación llena se apaga de golpe: un instante todo está ahí, y al siguiente ya no queda nada que sostener.»"
+      },
+      {
+        "book": "Entre Dos Mundos, Vol. I — Prefacio",
+        "text": "«Lo que mis ojos vieron tras el velo —las jerarquías que gobiernan las sombras, la luz extraordinaria que emana del trono de Adonay, la naturaleza real de lo que habita las dimensiones invisibles de nuestra realidad— me parecía demasiado vasto para el lenguaje humano.»"
+      },
+      {
+        "book": "Entre Dos Mundos, Vol. I — El regreso",
+        "text": "«Había aprendido, en el umbral entre la vida y la muerte, que el dolor del cuerpo y la paz del alma pueden coexistir. No como una contradicción que se resuelve, sino como una paradoja que se habita.»"
+      },
+      {
+        "book": "Narcisismo: La Primera Ley de la Cristalización — Introducción",
+        "text": "«Desde el mito griego de Narciso hasta la caída del Querubín en la tradición hebrea, estas narrativas nos proporcionan un mapa detallado de cómo la autoconsciencia puede transformarse en auto-obsesión, y cómo el amor propio puede convertirse en autodestrucción.»"
+      },
+      {
+        "book": "Narcisismo: La Primera Ley de la Cristalización — El patrón universal",
+        "text": "«La caída del Querubín no fue simplemente un evento aislado en la historia cósmica, sino que estableció un patrón arquetípico que resonaría a través de toda la creación subsiguiente. Este patrón —perfección que se vuelve sobre sí misma— es la Primera Ley de la Cristalización.»"
+      },
+      {
+        "book": "El Renacido — Testimonio",
+        "text": "«Vi mi propia muerte múltiples veces, en diferentes escenarios, como si Dios me estuviera mostrando posibles caminos que mi vida podría tomar dependiendo de elecciones que aún no había hecho. No como amenaza, sino como cartografía de la libertad.»"
+      },
+      {
+        "book": "El Renacido — El retorno",
+        "text": "«Aquel vehículo no era un cuerpo en estado crítico: era un alma que descendía desde las alturas celestiales de regreso a la carne, atravesando el espacio liminal que separa el reino eterno del plano terrenal, esa franja invisible donde las dimensiones se tocan y donde las fuerzas que operan en ambas pueden actuar simultáneamente.»"
+      },
+      {
+        "book": "Jesucristo, El León de Judá — El Tzimtzum Divino",
+        "text": "«El Tallit representa Or Makif —Luz Circundante—, la presencia protectora de Dios que rodea al alma antes de que descienda al cuerpo físico. En este concepto cabalístico encontramos la clave para comprender cómo el Dios infinito genera el espacio ontológico para la creación finita.»"
+      },
+      {
+        "book": "El Espejo Quebrado — Psicoanálisis y metafísica",
+        "text": "«Su efectividad radica en que opera simultáneamente en el plano físico y en el espiritual, afectando tanto el cuerpo como el alma del que la recibe, creando estados emocionales y espirituales específicos con una eficiencia que pocos en el mundo físico reconocen como lo que es.»"
+      },
+      {
+        "book": "Entre Dos Mundos, Vol. I — La certeza interior",
+        "text": "«La respuesta llegó no como un argumento que yo pudiera rebatir o aceptar según mi criterio, sino como una certeza que se instaló en mí con la misma autoridad con que todas las certezas verdaderas llegan: desde adentro, desde ese lugar donde el Espíritu habla sin necesidad de palabras pero con una claridad que excede a cualquier palabra.»"
       }
     ]
   },
