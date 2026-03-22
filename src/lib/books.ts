@@ -60,7 +60,7 @@ export const BOOKS: Book[] = [
     series:  'Navegando por el Océano del Infinito',
     isbn:    '9798311562621', year: 2024,
     coverColor: '#050d18', spineColor: '#030810', glowColor: '#3a7a90',
-    coverImage: '/covers/narcisismo.jpg',
+    coverImage: '/covers/narcisismo.png',
     amazonUrl: 'https://www.amazon.com/author/andrewmyer',
     categoryEs: 'Psicología · Teología · Filosofía',
     categoryEn: 'Psychology · Theology · Philosophy',
