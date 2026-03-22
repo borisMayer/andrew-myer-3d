@@ -2,101 +2,102 @@
   "nav": {
     "home": "Home",
     "author": "The Author",
-    "books": "Books",
-    "thought": "Thought",
+    "books": "Publications",
+    "thought": "Research",
     "excerpts": "Excerpts",
-    "contact": "Contact",
-    "language": "Language"
+    "contact": "Contact"
   },
   "hero": {
-    "series": "Voyaging Across the Boundless Sea",
-    "subtitle": "Spiritual and metaphysical author. Revelations from beyond\nthat transform the understanding of existence.",
-    "cta_books": "Explore the Work",
-    "cta_author": "Meet the Author",
-    "scroll": "Discover"
+    "series": "Theology · Philosophy · Clinical Psychology",
+    "eyebrow": "Doctor of Theology (Reformed) · Clinical Psychologist · Engineer",
+    "subtitle": "A body of work integrating Reformed systematic theology, Lacanian psychoanalysis and logotherapy into an original interdisciplinary proposition.",
+    "cta_books": "View Publications",
+    "cta_author": "Academic Profile",
+    "scroll": "Explore"
   },
   "author": {
     "label": "The Author",
-    "title": "A life on the threshold of the invisible",
-    "title_em": "threshold of the invisible",
-    "bio_1": "Andrew Myer experienced a deep connection with the spiritual world from an early age.",
-    "bio_2": "His near-death experience during the COVID-19 pandemic revealed extraordinary truths about realities beyond the physical world.",
-    "bio_3": "Trained in theology, philosophy, and psychology, he dedicates his life to sharing the teachings received from the other side.",
-    "quote": "\"The truths I brought back from the other side cannot be silenced. The universe insists they be shared.\"",
-    "photo_caption": "Andrew Myer — Author",
-    "tags": ["Theology", "Metaphysics", "Philosophy", "Spiritual Psychology", "Near-Death Experiences"]
+    "title": "Andrew Myer",
+    "credentials": "Dr. Theol. · M.Sc. Industrial Eng. · Clinical Psychologist",
+    "bio_1": "Andrew Myer holds a Master's in Industrial Engineering and a Doctorate in Reformed Theology. He maintains an independent clinical practice in which he integrates Lacanian psychoanalysis, Viktor Frankl's logotherapy, Hebrew spirituality and Reformed theology as complementary frameworks for understanding the subject.",
+    "bio_2": "In the theological field, he directs a Reformed Seminary and coordinates pastoral work within the Reformed tradition. His doctoral research is grounded in classical systematic theology—with particular reference to Abraham Kuyper, Herman Bavinck, Geerhardus Vos, Cornelius Van Til, Francis Turretin and John Frame—in dialogue with patristics, Hebrew mysticism and the Kabbalistic tradition.",
+    "bio_3": "He resides and practises in Chile. His work encompasses engineering consultancy, independent clinical practice and academic direction of the Reformed Seminary, with intellectual and institutional outreach towards Europe and the Mediterranean world.",
+    "quote": "\"This synthesis, developed over years of clinical practice and theoretical reflection, constitutes an original proposition in the field of psychology with a philosophical and spiritual orientation.\"",
+    "photo_caption": "Andrew Myer",
+    "tags": ["Systematic Theology", "Lacanian Psychoanalysis", "Logotherapy", "Reformed Theology", "Hebrew Mysticism", "Patristics", "Industrial Engineering"]
   },
   "thought": {
-    "label": "Thought & Influences",
-    "title": "Academic and intellectual roots",
-    "subtitle": "An interdisciplinary synthesis of classical philosophy, theology, and modern psychology.",
+    "label": "Research Areas",
+    "title": "Interdisciplinary research",
+    "subtitle": "Andrew Myer's work is situated at the intersection of Reformed systematic theology, clinically oriented psychoanalytic psychology and the Western and Semitic philosophical tradition.",
     "pillars": [
       {
-        "icon": "◈",
-        "title": "Platonic and Aristotelian Philosophy",
-        "body": "The search for the eternal within the temporal. The world of Ideas as the substrate of visible reality. Aristotle's notion of the soul as the form of the body, reinterpreted through mystical experience."
+        "icon": "01",
+        "title": "Reformed Systematic Theology",
+        "body": "Research within the framework of classical Reformed theology: Abraham Kuyper, Herman Bavinck, Geerhardus Vos, Cornelius Van Til and Francis Turretin. Active lines: Christ's descent into Hades, the notion of ecclesiastical exousia, spiritual warfare from a Reformed perspective and the relationship between Hebrew mysticism and Reformed dogmatics."
       },
       {
-        "icon": "✦",
-        "title": "Christian and Esoteric Theology",
-        "body": "The angelic fall as a metaphysical archetype. Redemption as a process of spiritual crystallization. Influences from Rhenish mysticism, Christian Kabbalah, and apophatic theology."
+        "icon": "02",
+        "title": "Clinical Psychology and Theoretical Integration",
+        "body": "Clinical practice integrating Lacanian psychoanalysis, Viktor Frankl's logotherapy, Hebrew spirituality and pastoral theology. Special focus on narcissism as both a clinical and philosophical-theological category, and on the mechanisms underlying the experience of human suffering."
       },
       {
-        "icon": "◇",
-        "title": "Psychology of the Ego and the Self",
-        "body": "Narcissism as an ontological structure, not merely clinical. Jung, the collective unconscious, and archetypes. The near-death experience as ego disruption and threshold of the Self."
+        "icon": "03",
+        "title": "Patristics, Hebrew Mysticism and Kabbalistic Theology",
+        "body": "Dialogue between the Christian patristic tradition, Hebrew mysticism and Kabbalah as complementary sources of theological understanding. Research on the Kabbalistic Tzimtzum in relation to Reformed Trinitarian theology and Christology."
       }
     ],
     "quote_author": "Andrew Myer",
-    "central_quote": "\"Narcissism is not merely an individual pathology: it is the primordial law by which the universe contemplates itself and crystallizes matter.\""
+    "central_quote": "\"Narcissism is not simply a personality disorder catalogued in diagnostic manuals, but a primordial force that has affected both celestial and earthly beings, manifesting as a universal pattern that traverses time and dimensions.\""
   },
   "books": {
-    "label": "The Work",
-    "title": "Book Catalog",
-    "subtitle": "Each work is a door toward a deeper understanding of existence.",
-    "buy": "Buy on Amazon",
+    "label": "Publications",
+    "title": "Works",
+    "subtitle": "A bibliographic corpus integrating theological research, psychoanalytic analysis and philosophical reflection into an original interdisciplinary proposition.",
+    "buy": "Amazon",
+    "modal_buy": "Purchase on Amazon",
     "rotate_hint": "Drag to rotate",
-    "explore_360": "Explore in 360°",
-    "discover": "Discover the energy",
-    "coming_soon": "Coming Soon",
-    "placeholder_title": "New Work",
-    "placeholder_desc": "A new work in preparation. Pure theology, philosophy, or spiritual psychology."
+    "explore_360": "360° view",
+    "discover": "Explore",
+    "coming_soon": "In preparation",
+    "placeholder_title": "Forthcoming publication",
+    "placeholder_desc": "Work in preparation in the field of systematic theology, philosophy or clinically oriented psychology."
   },
   "excerpts": {
-    "label": "Featured Excerpts",
-    "title": "Fragments of the Work",
-    "subtitle": "Words that open dimensions.",
+    "label": "Excerpts",
+    "title": "Selected passages",
+    "subtitle": "Representative passages from the published works.",
     "items": [
       {
-        "book": "The Broken Mirror",
-        "text": "\"Metaphysical narcissism is not man's self-love: it is the movement by which light bends upon itself and generates the illusion of an observer separate from the universe.\""
+        "book": "Narcissism: The First Law of Crystallization",
+        "text": "\"Narcissism transcends mere modern psychological categorisation to reveal itself as a fundamental metaphysical force present since the dawn of creation. It is not simply a personality disorder catalogued in diagnostic manuals, but a primordial force that has affected both celestial and earthly beings, manifesting as a universal pattern of self-destruction that traverses time and dimensions.\""
       },
       {
-        "book": "The Reborn",
-        "text": "\"Death is not a door closing. It is a mirror shattering — and in the fragments, for the first time, you see the whole.\""
+        "book": "Between Two Worlds, Vol. I",
+        "text": "\"This book is, at the same time, a warning and a source of hope. A warning about the forces that operate in the shadows of our civilisation with an organisation and an antiquity that surpass any human conspiracy. And an unshakeable hope in the absolute sovereignty of Adonay over all creation.\""
       },
       {
-        "book": "Narcissism: The First Law",
-        "text": "\"Before there was matter, before there was light, there was an act: the infinite contemplated itself. That is the First Law of Crystallization.\""
+        "book": "Between Two Worlds, Vol. I — Prologue",
+        "text": "\"What happened afterwards has no name in any language I know. It was not a dream, not a hallucination, not the delirium of a collapsing body. It was, with a clarity that still astonishes me, the most real experience of my entire life. This book is the attempt to tell it.\""
       }
     ]
   },
   "newsletter": {
-    "label": "Stay Connected",
-    "title": "Receive revelations",
-    "subtitle": "New works, reflections, and teachings directly to your inbox.",
-    "placeholder": "Your email address",
+    "label": "Updates",
+    "title": "Academic news",
+    "subtitle": "New publications, articles and Reformed Seminary activities.",
+    "placeholder": "Email address",
     "button": "Subscribe",
-    "privacy": "No spam. Only revelations."
+    "privacy": "No advertising. Academic content only."
   },
   "contact": {
     "label": "Contact",
-    "title": "Do you have something to share?",
-    "subtitle": "For inquiries about the work, lectures, or academic collaborations.",
-    "name_placeholder": "Your name",
-    "email_placeholder": "Your email",
-    "message_placeholder": "Your message...",
-    "send": "Send message",
+    "title": "Academic and clinical enquiries",
+    "subtitle": "For enquiries regarding publications, academic collaborations, the Reformed Seminary or clinical practice.",
+    "name_placeholder": "Name",
+    "email_placeholder": "Email address",
+    "message_placeholder": "Message...",
+    "send": "Send",
     "sending": "Sending..."
   }
 }
