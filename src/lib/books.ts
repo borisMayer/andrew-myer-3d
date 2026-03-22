@@ -45,7 +45,7 @@ export const BOOKS: Book[] = [
     series:  'Navegando por el Océano del Infinito',
     year:    2023,
     coverColor: '#0a1010', spineColor: '#060a0a', glowColor: '#4a8070',
-    coverImage: '/covers/renacido.jpg',
+    coverImage: '/covers/renacido.png',
     amazonUrl: 'https://www.amazon.com/author/andrewmyer',
     categoryEs: 'Testimonio · Psicología Espiritual',
     categoryEn: 'Testimony · Spiritual Psychology',

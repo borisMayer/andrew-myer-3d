@@ -38,13 +38,17 @@ function BookCard({ book, index, onSelect, onOpenLiveBook }: {
       <div ref={imgRef}
         onClick={() => !book.comingSoon && onSelect(book)}
         style={{
-          width:'100%', aspectRatio:'2/3', borderRadius:'2px',
-          marginBottom:'0.9rem', position:'relative', overflow:'hidden',
+          width:'100%',
+          paddingBottom:'152.6%',  /* matches real cover ratio 1.526 */
+          position:'relative', overflow:'hidden',
+          borderRadius:'2px',
+          marginBottom:'0.9rem',
           boxShadow:'0 6px 24px rgba(0,0,0,0.5)',
           cursor: book.comingSoon ? 'default' : 'pointer',
           transition:'transform 0.35s ease, box-shadow 0.35s ease',
-          border:'1px solid rgba(255,255,255,0.04)',
+          border:'1px solid rgba(255,255,255,0.06)',
           background: book.coverColor,
+          flexShrink: 0,
         }}
         onMouseEnter={e => {
           if (book.comingSoon) return;
@@ -61,7 +65,12 @@ function BookCard({ book, index, onSelect, onOpenLiveBook }: {
             src={book.coverImage}
             alt={title}
             loading="lazy"
-            style={{ width:'100%', height:'100%', objectFit:'cover', display:'block' }}
+            style={{
+              position:'absolute', inset:0,
+              width:'100%', height:'100%',
+              objectFit:'cover', objectPosition:'center top',
+              display:'block',
+            }}
           />
         ) : book.comingSoon ? (
           <div style={{ position:'absolute', inset:0, display:'flex', alignItems:'center', justifyContent:'center' }}>
@@ -72,6 +81,7 @@ function BookCard({ book, index, onSelect, onOpenLiveBook }: {
         ) : (
           <div style={{ position:'absolute', inset:0, background:`linear-gradient(160deg, ${book.coverColor} 0%, ${book.spineColor} 100%)` }}>
             <div style={{ position:'absolute', left:0, top:0, bottom:0, width:'5px', background:'rgba(0,0,0,0.35)' }} />
+            <div style={{ position:'absolute', top:0, left:0, right:0, height:'35%', background:'linear-gradient(to bottom, rgba(255,255,255,0.04), transparent)' }} />
           </div>
         )}
 
