@@ -252,13 +252,20 @@ export default function LiveBook({ bookId, coverSrc, title, onClose }: LiveBookP
   const wrapRef   = useRef<HTMLDivElement>(null);
   const total = PAGES.length - 1;
 
-  // Entrance animation
+  // Entrance animation + hide site nav while book is open
   useEffect(() => {
     if (wrapRef.current) {
       gsap.fromTo(wrapRef.current,
         { opacity:0, scale:0.97 },
         { opacity:1, scale:1, duration:0.5, ease:'power3.out' });
     }
+    const navEl = document.querySelector('nav') as HTMLElement | null;
+    if (navEl) navEl.style.visibility = 'hidden';
+    document.body.style.overflow = 'hidden';
+    return () => {
+      if (navEl) navEl.style.visibility = 'visible';
+      document.body.style.overflow = '';
+    };
   }, []);
 
   const goTo = useCallback((dir: 'next'|'prev') => {
@@ -317,6 +324,38 @@ export default function LiveBook({ bookId, coverSrc, title, onClose }: LiveBookP
       display:'flex', flexDirection:'column',
       fontFamily:"'EB Garamond', Georgia, serif",
     }}>
+
+      {/* ── Floating close button — always on top, no z-index conflicts ── */}
+      <button
+        onClick={onClose}
+        style={{
+          position: 'fixed', top: '0.65rem', right: '0.65rem',
+          zIndex: 99999,
+          width: '38px', height: '38px',
+          background: 'rgba(14,11,5,0.95)',
+          border: '1px solid rgba(180,155,90,0.35)',
+          borderRadius: '3px',
+          color: 'rgba(200,185,140,0.85)',
+          fontSize: '16px', cursor: 'pointer',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          transition: 'all 0.2s',
+          backdropFilter: 'blur(8px)',
+        }}
+        onMouseEnter={e => {
+          e.currentTarget.style.background = 'rgba(30,22,8,0.98)';
+          e.currentTarget.style.borderColor = 'rgba(200,165,70,0.7)';
+          e.currentTarget.style.color = 'rgba(230,210,150,1)';
+        }}
+        onMouseLeave={e => {
+          e.currentTarget.style.background = 'rgba(14,11,5,0.95)';
+          e.currentTarget.style.borderColor = 'rgba(180,155,90,0.35)';
+          e.currentTarget.style.color = 'rgba(200,185,140,0.85)';
+        }}
+        title="Cerrar (ESC)"
+        aria-label="Cerrar libro"
+      >
+        ✕
+      </button>
 
       {/* ── Top bar ──────────────────────────────────────── */}
       <div style={{
