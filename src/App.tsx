@@ -10,10 +10,8 @@ import type { Book } from './lib/books';
 
 gsap.registerPlugin(ScrollTrigger);
 
-// Lazy load 3D scene for performance
 const HeroScene = lazy(() => import('./components/3d/HeroScene'));
 
-// Detect WebGL support
 function hasWebGL(): boolean {
   try {
     const canvas = document.createElement('canvas');
@@ -21,38 +19,32 @@ function hasWebGL(): boolean {
       window.WebGLRenderingContext &&
       (canvas.getContext('webgl') || canvas.getContext('experimental-webgl'))
     );
-  } catch {
-    return false;
-  }
+  } catch { return false; }
 }
 
-// Loading screen
 function LoadingScreen() {
   return (
     <div style={{
       position: 'fixed', inset: 0, zIndex: 200,
       background: '#020008',
-      display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-      gap: '1.5rem',
+      display: 'flex', flexDirection: 'column',
+      alignItems: 'center', justifyContent: 'center', gap: '1.5rem',
     }}>
       <div style={{
         fontFamily: "'Cormorant Garamond', Georgia, serif",
-        fontSize:   '2rem', fontWeight: 300, color: '#c9a227',
-        animation:  'pulseGlow 2s ease-in-out infinite',
-        letterSpacing: '0.1em',
-      }}>
-        ◈
-      </div>
-      <p style={{ fontFamily: "'Raleway', sans-serif", fontSize: '11px', letterSpacing: '0.3em', color: 'rgba(226,217,243,0.5)', textTransform: 'uppercase' }}>
-        Abriendo el portal...
-      </p>
-      {/* Loading bar */}
+        fontSize: '3rem', fontWeight: 300, color: '#c9a227',
+        letterSpacing: '0.1em', textShadow: '0 0 40px rgba(201,162,39,0.8)',
+      }}>◈</div>
+      <p style={{
+        fontFamily: "'Raleway', sans-serif", fontSize: '11px',
+        letterSpacing: '0.3em', color: 'rgba(226,217,243,0.5)', textTransform: 'uppercase',
+      }}>Abriendo el portal...</p>
       <div style={{ width: '120px', height: '1px', background: 'rgba(201,162,39,0.2)', borderRadius: '1px', overflow: 'hidden' }}>
         <div style={{
-          height: '100%', background: 'linear-gradient(90deg, #7c3aed, #c9a227)',
-          borderRadius: '1px',
-          animation: 'shimmer 1.5s ease-in-out infinite',
+          height: '100%',
+          background: 'linear-gradient(90deg, transparent, #c9a227, #7c3aed, transparent)',
           backgroundSize: '200% 100%',
+          animation: 'shimmer 1.5s ease-in-out infinite',
         }} />
       </div>
     </div>
@@ -60,42 +52,33 @@ function LoadingScreen() {
 }
 
 export default function App() {
-  const [mouseX,     setMouseX]     = useState(0);
-  const [mouseY,     setMouseY]     = useState(0);
-  const [scrollY,    setScrollY]    = useState(0);
-  const [showBooks,  setShowBooks]  = useState(false);
+  const [mouseX,       setMouseX]       = useState(0);
+  const [mouseY,       setMouseY]       = useState(0);
+  const [scrollY,      setScrollY]      = useState(0);
+  const [showBooks,    setShowBooks]    = useState(false);
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
-  const [loaded,     setLoaded]     = useState(false);
-  const [webgl,      setWebgl]      = useState(true);
-  const [isMobile,   setIsMobile]   = useState(false);
-
+  const [loaded,       setLoaded]       = useState(false);
+  const [webgl,        setWebgl]        = useState(true);
+  const [isMobile,     setIsMobile]     = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Check WebGL and mobile
     setWebgl(hasWebGL());
-    setIsMobile(window.innerWidth < 768 || /Android|iPhone|iPad/i.test(navigator.userAgent));
+    setIsMobile(window.innerWidth < 768);
+    const timer = setTimeout(() => setLoaded(true), 1400);
 
-    // Simulate loading
-    const timer = setTimeout(() => setLoaded(true), 1200);
-
-    // Mouse tracking
     const onMouse = (e: MouseEvent) => {
       setMouseX((e.clientX / window.innerWidth  - 0.5) * 2);
       setMouseY((e.clientY / window.innerHeight - 0.5) * 2);
     };
-
-    // Scroll tracking
     const onScroll = () => {
-      const s = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
+      const s = window.scrollY / Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
       setScrollY(s);
-      // Show books when scrolled to books section
       setShowBooks(s > 0.35);
     };
 
     window.addEventListener('mousemove', onMouse,  { passive: true });
     window.addEventListener('scroll',    onScroll, { passive: true });
-
     return () => {
       clearTimeout(timer);
       window.removeEventListener('mousemove', onMouse);
@@ -103,7 +86,6 @@ export default function App() {
     };
   }, []);
 
-  // Fallback: mobile 2D
   if (isMobile || !webgl) {
     const MobileFallback = lazy(() => import('./components/ui/MobileWarning'));
     return (
@@ -114,75 +96,98 @@ export default function App() {
   }
 
   return (
-    <div style={{ background: '#020008', minHeight: '100vh' }}>
+    <div style={{ background: '#020008', minHeight: '400vh' }}>
       {!loaded && <LoadingScreen />}
 
-      {/* Fixed 3D canvas — background layer */}
-      <Suspense fallback={null}>
-        <HeroScene
-          mouseX={mouseX}
-          mouseY={mouseY}
-          scrollY={scrollY}
-          onSelect={setSelectedBook}
-          showBooks={showBooks}
-        />
-      </Suspense>
+      {/* Fixed 3D canvas — z-index 1 */}
+      <div style={{ position: 'fixed', inset: 0, zIndex: 1 }}>
+        <Suspense fallback={null}>
+          <HeroScene
+            mouseX={mouseX} mouseY={mouseY} scrollY={scrollY}
+            onSelect={setSelectedBook} showBooks={showBooks}
+          />
+        </Suspense>
+      </div>
 
-      {/* Fixed navigation */}
-      <Navigation />
+      {/* Fixed navigation — z-index 50 */}
+      <div style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50 }}>
+        <Navigation />
+      </div>
 
-      {/* Scrollable content — sits on top of 3D */}
+      {/* Scrollable content — z-index 10, pointer-events none on wrapper */}
       <div ref={contentRef} style={{ position: 'relative', zIndex: 10 }}>
-        {/* Sections are spacers + overlays */}
-        <HeroSection />
 
-        {/* Spacer so the 3D scene has room */}
+        {/* HERO — full viewport height */}
+        <section style={{
+          height: '100vh', display: 'flex', flexDirection: 'column',
+          alignItems: 'center', justifyContent: 'center',
+          textAlign: 'center', padding: '0 1.5rem',
+          pointerEvents: 'none',
+        }}>
+          <HeroSection />
+        </section>
+
+        {/* Spacer */}
+        <div style={{ height: '40vh' }} />
+
+        {/* AUTHOR */}
+        <section style={{ pointerEvents: 'auto' }}>
+          <AuthorSection />
+        </section>
+
         <div style={{ height: '20vh' }} />
 
-        <AuthorSection />
+        {/* BOOKS */}
+        <section id="books" style={{ pointerEvents: 'auto' }}>
+          <BooksSection onSelectBook={setSelectedBook} />
+        </section>
 
-        <div style={{ height: '10vh' }} />
-
-        <BooksSection onSelectBook={setSelectedBook} />
-
-        {/* Footer */}
+        {/* FOOTER */}
         <footer style={{
-          padding:    '4rem 2rem',
-          textAlign:  'center',
-          borderTop:  '1px solid rgba(124,58,237,0.15)',
-          background: 'rgba(2,0,8,0.8)',
+          padding: '5rem 2rem', textAlign: 'center',
+          background: 'linear-gradient(to top, rgba(2,0,8,0.98), rgba(7,0,31,0.9))',
+          borderTop: '1px solid rgba(124,58,237,0.15)',
           backdropFilter: 'blur(20px)',
+          pointerEvents: 'auto',
         }}>
-          <p style={{
-            fontFamily:   "'Cormorant Garamond', Georgia, serif",
-            fontSize:     '1.5rem',
-            fontWeight:   300,
-            color:        '#c9a227',
-            marginBottom: '0.5rem',
-          }}>
+          {/* Decorative line */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', justifyContent: 'center', marginBottom: '2rem' }}>
+            <div style={{ flex: 1, maxWidth: '120px', height: '1px', background: 'linear-gradient(to right, transparent, rgba(201,162,39,0.5))' }} />
+            <span style={{ color: '#c9a227', fontSize: '1.2rem' }}>◆</span>
+            <div style={{ flex: 1, maxWidth: '120px', height: '1px', background: 'linear-gradient(to left, transparent, rgba(201,162,39,0.5))' }} />
+          </div>
+
+          <p style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", fontSize: '2rem', fontWeight: 300, color: '#c9a227', marginBottom: '0.5rem', letterSpacing: '0.05em' }}>
             Andrew Myer
           </p>
-          <p style={{
-            fontFamily:  "'Raleway', sans-serif",
-            fontSize:    '12px',
-            letterSpacing: '0.15em',
-            color:       'rgba(226,217,243,0.35)',
-            textTransform: 'uppercase',
-          }}>
+          <p style={{ fontFamily: "'Raleway', sans-serif", fontSize: '11px', letterSpacing: '0.3em', color: 'rgba(226,217,243,0.3)', textTransform: 'uppercase', marginBottom: '2rem' }}>
             Navegando por el Océano del Infinito
           </p>
-          <p style={{ marginTop: '1.5rem', color: 'rgba(226,217,243,0.25)', fontSize: '12px', fontFamily: "'Raleway', sans-serif" }}>
+
+          {/* Social / links placeholder */}
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '1.5rem', marginBottom: '2rem' }}>
+            {['Amazon', 'Goodreads', 'Contacto'].map(link => (
+              <a key={link} href="#" style={{
+                fontFamily: "'Raleway', sans-serif", fontSize: '12px',
+                color: 'rgba(201,162,39,0.5)', textDecoration: 'none',
+                letterSpacing: '0.1em', transition: 'color 0.3s',
+              }}
+              onMouseEnter={e => (e.currentTarget.style.color = '#c9a227')}
+              onMouseLeave={e => (e.currentTarget.style.color = 'rgba(201,162,39,0.5)')}>
+                {link}
+              </a>
+            ))}
+          </div>
+
+          <p style={{ fontFamily: "'Raleway', sans-serif", fontSize: '11px', color: 'rgba(226,217,243,0.2)' }}>
             © {new Date().getFullYear()} Andrew Myer. Todos los derechos reservados.
           </p>
         </footer>
       </div>
 
-      {/* Book detail modal */}
+      {/* Book modal — z-index 100 */}
       {selectedBook && (
-        <BookModal
-          book={selectedBook}
-          onClose={() => setSelectedBook(null)}
-        />
+        <BookModal book={selectedBook} onClose={() => setSelectedBook(null)} />
       )}
     </div>
   );
