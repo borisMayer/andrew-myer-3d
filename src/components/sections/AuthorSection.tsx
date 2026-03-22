@@ -7,99 +7,108 @@ gsap.registerPlugin(ScrollTrigger);
 export default function AuthorSection() {
   const { t } = useTranslation();
   const sectionRef = useRef<HTMLElement>(null);
-  const photoRef   = useRef<HTMLDivElement>(null);
-  const textRef    = useRef<HTMLDivElement>(null);
+  const tags = t('author.tags', { returnObjects: true }) as string[];
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.fromTo(photoRef.current,
-        { opacity: 0, x: -50, filter: 'blur(8px)' },
-        { opacity: 1, x: 0, filter: 'blur(0px)', duration: 1.4, ease: 'power3.out',
-          scrollTrigger: { trigger: sectionRef.current, start: 'top 72%' } });
-      gsap.fromTo(textRef.current,
-        { opacity: 0, x: 50 },
-        { opacity: 1, x: 0, duration: 1.4, ease: 'power3.out', delay: 0.2,
-          scrollTrigger: { trigger: sectionRef.current, start: 'top 72%' } });
+      gsap.fromTo('.author-photo', { opacity:0, x:-40 }, { opacity:1, x:0, duration:1.2, ease:'power3.out', scrollTrigger: { trigger: sectionRef.current, start:'top 70%' } });
+      gsap.fromTo('.author-text',  { opacity:0, x:40  }, { opacity:1, x:0, duration:1.2, ease:'power3.out', delay:0.15, scrollTrigger: { trigger: sectionRef.current, start:'top 70%' } });
     }, sectionRef);
     return () => ctx.revert();
   }, []);
 
-  const tags = t('author.tags', { returnObjects: true }) as string[];
-
   return (
     <section id="author" ref={sectionRef} style={{
-      minHeight: '100vh', display: 'flex', alignItems: 'center',
-      padding: 'clamp(5rem,9vw,9rem) clamp(1.5rem,5vw,6rem)',
+      padding: 'var(--space-section) var(--space-gutter)',
       pointerEvents: 'auto',
     }}>
-      <div style={{ maxWidth: '1080px', margin: '0 auto', width: '100%' }}>
-        <p style={{ color: '#c9a227', fontSize: '10px', letterSpacing: '0.3em', textTransform: 'uppercase', marginBottom: '3.5rem', fontFamily: "'Raleway', sans-serif" }}>
-          ◆ {t('author.label')}
-        </p>
+      <div style={{ maxWidth: 'var(--max-width)', margin: '0 auto', width: '100%' }}>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(280px,1fr))', gap: '4rem', alignItems: 'center' }}>
+        {/* Section header */}
+        <div className="section-rule">
+          <span className="label-tag">{t('author.label')}</span>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(280px,1fr))', gap: '4rem', alignItems: 'start' }}>
+
           {/* Photo */}
-          <div ref={photoRef}>
+          <div className="author-photo">
             <div style={{
-              position: 'relative', width: '100%', maxWidth: '340px',
-              aspectRatio: '3/4', borderRadius: '1.75rem', overflow: 'hidden',
-              background: 'linear-gradient(135deg, #12062a, #07001f)',
-              border: '1px solid rgba(124,58,237,0.25)',
-              boxShadow: '0 0 50px rgba(124,58,237,0.18), 0 0 100px rgba(201,162,39,0.08)',
+              position: 'relative', width: '100%', maxWidth: '320px',
+              aspectRatio: '4/5', borderRadius: '2px', overflow: 'hidden',
+              background: 'rgba(16,16,22,0.9)',
+              border: '1px solid rgba(255,255,255,0.06)',
             }}>
-              {/* Placeholder — replace with <img src="/author-photo.jpg" ... /> */}
-              <div style={{ width:'100%', height:'100%', display:'flex', alignItems:'center', justifyContent:'center', flexDirection:'column', gap:'1.2rem', opacity: 0.4 }}>
-                <div style={{ width:'72px', height:'72px', borderRadius:'50%', background:'rgba(124,58,237,0.3)', border:'2px solid rgba(124,58,237,0.4)' }} />
-                <div style={{ width:'110px', height:'150px', background:'rgba(124,58,237,0.12)', borderRadius:'4px' }} />
+              {/* Placeholder — replace with real photo */}
+              <div style={{ width:'100%', height:'100%', display:'flex', alignItems:'center', justifyContent:'center', background: 'linear-gradient(160deg, #111120, #0a0a14)' }}>
+                <div style={{ textAlign: 'center', opacity: 0.25 }}>
+                  <div style={{ width:'64px', height:'64px', borderRadius:'50%', background:'rgba(180,155,90,0.2)', border:'1px solid rgba(180,155,90,0.3)', margin:'0 auto 12px' }} />
+                  <div style={{ width:'80px', height:'2px', background:'rgba(180,155,90,0.15)', margin:'0 auto 6px' }} />
+                  <div style={{ width:'60px', height:'2px', background:'rgba(180,155,90,0.1)', margin:'0 auto' }} />
+                </div>
               </div>
-              <div style={{ position:'absolute', inset:0, background:'radial-gradient(ellipse at 35% 20%, rgba(124,58,237,0.12) 0%, transparent 55%)', pointerEvents:'none' }} />
-              {/* Corner accents */}
-              {[[{top:'1.2rem',right:'1.2rem'},{borderTop:'1.5px solid rgba(201,162,39,0.5)',borderRight:'1.5px solid rgba(201,162,39,0.5)'}],[{bottom:'1.2rem',left:'1.2rem'},{borderBottom:'1.5px solid rgba(201,162,39,0.5)',borderLeft:'1.5px solid rgba(201,162,39,0.5)'}]].map(([pos,bord],i) => (
-                <div key={i} style={{ position:'absolute', width:'32px', height:'32px', ...pos as React.CSSProperties, ...bord as React.CSSProperties }} />
-              ))}
+              {/* Thin gold border accent bottom */}
+              <div style={{ position:'absolute', bottom:0, left:0, right:0, height:'2px', background:'linear-gradient(to right, transparent, rgba(180,155,90,0.4), transparent)' }} />
             </div>
-            <p style={{ marginTop:'0.9rem', color:'rgba(226,217,243,0.35)', fontSize:'11px', letterSpacing:'0.12em', fontFamily:"'Raleway', sans-serif", textAlign:'center' }}>
-              {t('author.photo_caption')}
-            </p>
+
+            {/* Caption */}
+            <div style={{ marginTop:'1rem', paddingLeft:'2px' }}>
+              <p style={{ fontFamily:'var(--font-serif)', fontSize:'1rem', color:'rgba(220,215,205,0.7)', fontStyle:'italic' }}>
+                Andrew Myer
+              </p>
+              <p style={{ fontFamily:'var(--font-mono)', fontSize:'9px', letterSpacing:'0.15em', color:'rgba(180,155,90,0.5)', marginTop:'3px', textTransform:'uppercase' }}>
+                Ph.D. Th. · M.A. Phil. · Lic. Psy.
+              </p>
+            </div>
           </div>
 
           {/* Text */}
-          <div ref={textRef}>
-            <h2 style={{ fontFamily:"'Cormorant Garamond', Georgia, serif", fontSize:'clamp(2rem,4vw,3.2rem)', fontWeight:300, color:'#ffffff', lineHeight:1.2, marginBottom:'1.75rem' }}>
-              {t('author.title').split(t('author.title_em')).map((part, i, arr) => (
-                <span key={i}>{part}{i < arr.length - 1 && <em style={{ color:'#c9a227' }}>{t('author.title_em')}</em>}</span>
-              ))}
+          <div className="author-text">
+            <h2 style={{
+              fontFamily: 'var(--font-serif)',
+              fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)',
+              fontWeight: 400, color: 'rgba(235,228,215,0.95)',
+              lineHeight: 1.15, marginBottom: '2rem',
+            }}>
+              {t('author.title')}
             </h2>
 
-            <div style={{ display:'flex', flexDirection:'column', gap:'1.1rem', color:'rgba(226,217,243,0.7)', lineHeight:1.85, fontSize:'0.97rem', fontFamily:"'Raleway', sans-serif", fontWeight:300 }}>
+            <div style={{ display:'flex', flexDirection:'column', gap:'1.1rem', color:'rgba(185,180,170,0.75)', lineHeight:1.85, fontSize:'0.95rem', fontFamily:'var(--font-sans)', fontWeight:300 }}>
               <p>{t('author.bio_1')}</p>
               <p>{t('author.bio_2')}</p>
               <p>{t('author.bio_3')}</p>
             </div>
 
-            {/* Quote */}
+            {/* Quote — typographic pullquote */}
             <blockquote style={{
-              marginTop:'2.2rem', padding:'1.3rem 1.8rem',
-              borderLeft:'2px solid rgba(201,162,39,0.55)',
-              background:'rgba(201,162,39,0.04)',
-              borderRadius:'0 1rem 1rem 0',
+              margin: '2rem 0 0', padding: '1.25rem 0 1.25rem 1.5rem',
+              borderLeft: '2px solid rgba(180,155,90,0.35)',
             }}>
-              <p style={{ fontFamily:"'Cormorant Garamond', Georgia, serif", color:'rgba(201,162,39,0.88)', fontSize:'1.05rem', fontStyle:'italic', lineHeight:1.65 }}>
+              <p style={{
+                fontFamily: 'var(--font-serif)', fontSize: '1.05rem',
+                fontStyle: 'italic', color: 'rgba(200,190,165,0.8)', lineHeight: 1.7,
+              }}>
                 {t('author.quote')}
               </p>
-              <cite style={{ display:'block', marginTop:'0.6rem', color:'rgba(201,162,39,0.45)', fontSize:'11px', letterSpacing:'0.16em', textTransform:'uppercase', fontStyle:'normal', fontFamily:"'Raleway', sans-serif" }}>
+              <cite style={{
+                display: 'block', marginTop: '0.6rem',
+                fontFamily: 'var(--font-mono)', fontSize: '9px',
+                letterSpacing: '0.15em', textTransform: 'uppercase',
+                color: 'rgba(180,155,90,0.45)', fontStyle: 'normal',
+              }}>
                 — Andrew Myer
               </cite>
             </blockquote>
 
-            {/* Tags */}
-            <div style={{ display:'flex', flexWrap:'wrap', gap:'0.65rem', marginTop:'1.8rem' }}>
+            {/* Academic tags */}
+            <div style={{ display:'flex', flexWrap:'wrap', gap:'0.5rem', marginTop:'1.75rem' }}>
               {tags.map(tag => (
                 <span key={tag} style={{
-                  padding:'0.35rem 0.9rem', borderRadius:'9999px',
-                  border:'1px solid rgba(124,58,237,0.28)',
-                  color:'rgba(124,58,237,0.85)', fontSize:'11px', letterSpacing:'0.05em',
-                  fontFamily:"'Raleway', sans-serif", background:'rgba(124,58,237,0.07)',
+                  padding:'0.3rem 0.8rem', borderRadius:'2px',
+                  border:'1px solid rgba(255,255,255,0.08)',
+                  color:'rgba(160,165,175,0.6)', fontSize:'10px',
+                  letterSpacing:'0.08em', fontFamily:'var(--font-sans)',
+                  background:'rgba(255,255,255,0.02)',
                 }}>{tag}</span>
               ))}
             </div>

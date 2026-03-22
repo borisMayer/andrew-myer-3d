@@ -1,4 +1,9 @@
-import { useRef, useMemo } from 'react';
+/**
+ * GeometricAccent — replaces floating crystals
+ * Clean tetrahedra and dodecahedra with minimal material
+ * Academic / architectural feel
+ */
+import { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
@@ -10,86 +15,53 @@ interface Props {
   offset?:  number;
 }
 
-export default function FloatingCrystal({
-  position, color = '#7c3aed', scale = 1, speed = 1, offset = 0,
+export default function GeometricAccent({
+  position,
+  color  = '#b4946a',
+  scale  = 1,
+  speed  = 1,
+  offset = 0,
 }: Props) {
-  const group = useRef<THREE.Group>(null);
-  const glow  = useRef<THREE.Mesh>(null);
+  const mesh = useRef<THREE.Group>(null);
 
   useFrame((state) => {
-    if (!group.current) return;
+    if (!mesh.current) return;
     const t = state.clock.elapsedTime * speed + offset;
-    group.current.position.x = position[0] + Math.sin(t * 0.5) * 0.15;
-    group.current.position.y = position[1] + Math.sin(t * 0.8) * 0.5;
-    group.current.position.z = position[2] + Math.cos(t * 0.3) * 0.1;
-    group.current.rotation.y += 0.012 * speed;
-    group.current.rotation.x += 0.006 * speed;
-    group.current.rotation.z += 0.004 * speed;
-    const s = scale * (1 + Math.sin(t * 1.4) * 0.1);
-    group.current.scale.setScalar(s);
-    // Pulsing glow
-    if (glow.current) {
-      (glow.current.material as THREE.MeshBasicMaterial).opacity =
-        0.12 + Math.sin(t * 2) * 0.05;
-    }
+    mesh.current.position.y = position[1] + Math.sin(t * 0.4) * 0.2;
+    mesh.current.rotation.y += 0.004 * speed;
+    mesh.current.rotation.x += 0.002 * speed;
   });
+
+  const geo = [
+    new THREE.TetrahedronGeometry(0.4, 0),
+    new THREE.OctahedronGeometry(0.35, 0),
+    new THREE.IcosahedronGeometry(0.3, 0),
+  ][Math.floor(offset) % 3];
 
   const col = new THREE.Color(color);
 
   return (
-    <group ref={group} position={position}>
-      {/* Crystal body — elongated octahedron */}
-      <mesh castShadow>
-        <octahedronGeometry args={[0.5, 0]} />
+    <group ref={mesh} position={position} scale={scale}>
+      {/* Wireframe outer */}
+      <mesh geometry={geo} scale={1.6}>
+        <meshBasicMaterial color={col} wireframe transparent opacity={0.15} />
+      </mesh>
+      {/* Solid inner */}
+      <mesh geometry={geo}>
         <meshPhongMaterial
-          color={col}
-          emissive={col}
-          emissiveIntensity={0.8}
-          shininess={200}
-          specular={new THREE.Color('#ffffff')}
-          transparent
-          opacity={0.85}
+          color={col} emissive={col} emissiveIntensity={0.2}
+          shininess={120} transparent opacity={0.5}
         />
       </mesh>
-
-      {/* Inner bright core */}
-      <mesh scale={[0.5, 0.5, 0.5]}>
-        <octahedronGeometry args={[0.5, 0]} />
-        <meshBasicMaterial color={'#ffffff'} transparent opacity={0.3} />
-      </mesh>
-
-      {/* Outer glow sphere */}
-      <mesh ref={glow} scale={[1.8, 1.8, 1.8]}>
-        <octahedronGeometry args={[0.5, 1]} />
-        <meshBasicMaterial
-          color={color}
-          transparent opacity={0.12}
-          blending={THREE.AdditiveBlending}
-          depthWrite={false}
-          side={THREE.BackSide}
-        />
-      </mesh>
-
-      {/* Point light */}
-      <pointLight color={color} intensity={0.8} distance={2.5} decay={2} />
     </group>
   );
 }
 
 export function CrystalCluster({ position }: { position: [number, number, number] }) {
-  const crystals = useMemo(() =>
-    Array.from({ length: 5 }, (_, i) => ({
-      position: [
-        position[0] + (Math.random() - 0.5) * 2,
-        position[1] + (Math.random() - 0.5) * 1.5,
-        position[2] + (Math.random() - 0.5) * 1.5,
-      ] as [number, number, number],
-      color:  ['#7c3aed','#c9a227','#06b6d4','#9333ea','#ec4899'][i % 5],
-      scale:  0.25 + Math.random() * 0.5,
-      speed:  0.6 + Math.random() * 1.2,
-      offset: Math.random() * Math.PI * 2,
-    })),
-  [position]);
-
-  return <>{crystals.map((c, i) => <FloatingCrystal key={i} {...c} />)}</>;
+  const items = [
+    { pos: [position[0]-0.8, position[1]+0.5, position[2]]    as [number,number,number], color:'#b4946a', scale:0.6, speed:0.7, offset:0 },
+    { pos: [position[0]+0.6, position[1]-0.3, position[2]+0.3] as [number,number,number], color:'#8090a8', scale:0.5, speed:0.9, offset:1 },
+    { pos: [position[0],     position[1]+0.8, position[2]-0.2] as [number,number,number], color:'#6a7a90', scale:0.4, speed:1.1, offset:2 },
+  ];
+  return <>{items.map((c,i) => <GeometricAccent key={i} {...c} />)}</>;
 }
