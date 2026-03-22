@@ -5,6 +5,7 @@
  * Sin Three.js — máxima compatibilidad y rendimiento
  */
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import gsap from 'gsap';
 
@@ -325,37 +326,7 @@ export default function LiveBook({ bookId, coverSrc, title, onClose }: LiveBookP
       fontFamily:"'EB Garamond', Georgia, serif",
     }}>
 
-      {/* ── Floating close button — always on top, no z-index conflicts ── */}
-      <button
-        onClick={onClose}
-        style={{
-          position: 'fixed', top: '0.65rem', right: '0.65rem',
-          zIndex: 99999,
-          width: '38px', height: '38px',
-          background: 'rgba(14,11,5,0.95)',
-          border: '1px solid rgba(180,155,90,0.35)',
-          borderRadius: '3px',
-          color: 'rgba(200,185,140,0.85)',
-          fontSize: '16px', cursor: 'pointer',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          transition: 'all 0.2s',
-          backdropFilter: 'blur(8px)',
-        }}
-        onMouseEnter={e => {
-          e.currentTarget.style.background = 'rgba(30,22,8,0.98)';
-          e.currentTarget.style.borderColor = 'rgba(200,165,70,0.7)';
-          e.currentTarget.style.color = 'rgba(230,210,150,1)';
-        }}
-        onMouseLeave={e => {
-          e.currentTarget.style.background = 'rgba(14,11,5,0.95)';
-          e.currentTarget.style.borderColor = 'rgba(180,155,90,0.35)';
-          e.currentTarget.style.color = 'rgba(200,185,140,0.85)';
-        }}
-        title="Cerrar (ESC)"
-        aria-label="Cerrar libro"
-      >
-        ✕
-      </button>
+      {/* close portal rendered separately below */}
 
       {/* ── Top bar ──────────────────────────────────────── */}
       <div style={{
@@ -503,6 +474,38 @@ export default function LiveBook({ bookId, coverSrc, title, onClose }: LiveBookP
         @media (min-width: 640px) { .kb-hint { display: block !important; } }
         @media (max-width: 600px) { button[style*="-50px"] { display: none !important; } }
       `}</style>
+
+      {/* Portal close button — bypasses ALL stacking contexts */}
+      {createPortal(
+        <button
+          onClick={onClose}
+          style={{
+            position: 'fixed',
+            top: '8px',
+            right: '8px',
+            zIndex: 2147483647,
+            width: '44px',
+            height: '44px',
+            background: 'rgba(10,8,4,0.96)',
+            border: '1px solid rgba(180,155,90,0.5)',
+            borderRadius: '3px',
+            color: 'rgba(210,190,130,0.9)',
+            fontSize: '18px',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontFamily: 'system-ui, sans-serif',
+            lineHeight: 1,
+            boxShadow: '0 2px 12px rgba(0,0,0,0.6)',
+          }}
+          title="Cerrar (ESC)"
+          aria-label="Cerrar libro"
+        >
+          ✕
+        </button>,
+        document.body
+      )}
     </div>
   );
 }
