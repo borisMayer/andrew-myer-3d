@@ -4,6 +4,13 @@
   "installCommand": "npm install",
   "framework": "vite",
   "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ],
+  "alias": [
+    "andrewmyer.com",
+    "www.andrewmyer.com"
   ]
 }
