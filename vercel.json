@@ -8,9 +8,5 @@
       "source": "/(.*)",
       "destination": "/index.html"
     }
-  ],
-  "alias": [
-    "andrewmyer.com",
-    "www.andrewmyer.com"
   ]
 }
