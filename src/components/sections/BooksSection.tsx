@@ -6,14 +6,16 @@ import { BOOKS } from '../../lib/books';
 import type { Book } from '../../lib/books';
 gsap.registerPlugin(ScrollTrigger);
 
-const LiveBook = lazy(() => import('../3d/LiveBook'));
+const LiveBook  = lazy(() => import('../3d/LiveBook'));
+const BuyModal  = lazy(() => import('../ui/BuyModal'));
 
 interface Props { onSelectBook: (b: Book) => void; }
 
-function BookCard({ book, index, onSelect, onOpenLiveBook }: {
+function BookCard({ book, index, onSelect, onOpenLiveBook, onOpenBuyModal }: {
   book: Book; index: number;
   onSelect: (b: Book) => void;
   onOpenLiveBook: (b: Book) => void;
+  onOpenBuyModal: (b: Book) => void;
 }) {
   const { t, i18n } = useTranslation();
   const cardRef  = useRef<HTMLDivElement>(null);
@@ -127,13 +129,22 @@ function BookCard({ book, index, onSelect, onOpenLiveBook }: {
       {/* Actions */}
       {!book.comingSoon && (
         <div style={{ display:'flex', gap:'0.5rem', flexWrap:'wrap', marginTop:'auto' }}>
+          {/* Comprar directo MP */}
+          <button
+            onClick={e => { e.stopPropagation(); onOpenBuyModal(book); }}
+            style={{ display:'inline-flex', alignItems:'center', gap:'4px', padding:'0.45rem 0.85rem', background:'rgba(180,155,90,0.13)', border:'1px solid rgba(180,155,90,0.45)', color:'rgba(200,175,80,0.92)', borderRadius:'2px', fontFamily:'var(--font-mono)', fontSize:'8.5px', letterSpacing:'0.1em', textTransform:'uppercase', cursor:'pointer', transition:'all 0.25s' }}
+            onMouseEnter={e => { e.currentTarget.style.background='rgba(180,155,90,0.24)'; e.currentTarget.style.borderColor='rgba(180,155,90,0.7)'; }}
+            onMouseLeave={e => { e.currentTarget.style.background='rgba(180,155,90,0.13)'; e.currentTarget.style.borderColor='rgba(180,155,90,0.45)'; }}>
+            {t('books.buyDirect')}
+          </button>
+
           {/* Amazon */}
           <a href={book.amazonUrl} target="_blank" rel="noopener noreferrer"
             onClick={e => e.stopPropagation()}
-            style={{ display:'inline-flex', alignItems:'center', gap:'4px', padding:'0.45rem 0.85rem', background:'transparent', border:'1px solid rgba(180,155,90,0.28)', color:'rgba(175,150,70,0.72)', borderRadius:'2px', textDecoration:'none', fontFamily:'var(--font-mono)', fontSize:'8.5px', letterSpacing:'0.1em', textTransform:'uppercase', transition:'all 0.25s' }}
-            onMouseEnter={e => { e.currentTarget.style.background='rgba(180,155,90,0.09)'; e.currentTarget.style.borderColor='rgba(180,155,90,0.5)'; e.currentTarget.style.color='rgba(195,168,80,0.95)'; }}
-            onMouseLeave={e => { e.currentTarget.style.background='transparent'; e.currentTarget.style.borderColor='rgba(180,155,90,0.28)'; e.currentTarget.style.color='rgba(175,150,70,0.72)'; }}>
-            <span>↗</span> {t('books.buy')}
+            style={{ display:'inline-flex', alignItems:'center', gap:'4px', padding:'0.45rem 0.85rem', background:'transparent', border:'1px solid rgba(255,255,255,0.07)', color:'rgba(140,135,125,0.55)', borderRadius:'2px', textDecoration:'none', fontFamily:'var(--font-mono)', fontSize:'8.5px', letterSpacing:'0.1em', textTransform:'uppercase', transition:'all 0.25s' }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor='rgba(180,155,90,0.35)'; e.currentTarget.style.color='rgba(175,150,70,0.75)'; }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor='rgba(255,255,255,0.07)'; e.currentTarget.style.color='rgba(140,135,125,0.55)'; }}>
+            <span>↗</span> Amazon
           </a>
 
           {/* Libro Vivo button */}
@@ -155,6 +166,7 @@ function BookCard({ book, index, onSelect, onOpenLiveBook }: {
 export default function BooksSection({ onSelectBook }: Props) {
   const { t } = useTranslation();
   const [liveBookData, setLiveBookData] = useState<Book | null>(null);
+  const [buyBook,      setBuyBook]      = useState<Book | null>(null);
 
   const allBooks = [
     ...BOOKS,
@@ -189,11 +201,19 @@ export default function BooksSection({ onSelectBook }: Props) {
                 key={book.id} book={book} index={i}
                 onSelect={onSelectBook}
                 onOpenLiveBook={(b) => setLiveBookData(b)}
+                onOpenBuyModal={(b) => setBuyBook(b)}
               />
             ))}
           </div>
         </div>
       </section>
+
+      {/* Buy Modal — Mercado Pago */}
+      {buyBook && (
+        <Suspense fallback={null}>
+          <BuyModal book={buyBook} onClose={() => setBuyBook(null)} />
+        </Suspense>
+      )}
 
       {/* Libro Vivo modal */}
       {liveBookData && (

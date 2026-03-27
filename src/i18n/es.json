@@ -69,7 +69,8 @@
     "discover": "Explorar",
     "coming_soon": "En preparación",
     "placeholder_title": "Próxima publicación",
-    "placeholder_desc": "Trabajo en preparación en el ámbito de la teología sistemática, la filosofía o la psicología de orientación clínica."
+    "placeholder_desc": "Trabajo en preparación en el ámbito de la teología sistemática, la filosofía o la psicología de orientación clínica.",
+    "buyDirect": "Comprar"
   },
   "excerpts": {
     "label": "Extractos",
