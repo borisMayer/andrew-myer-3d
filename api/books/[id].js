@@ -1,42 +1,49 @@
 import sql from '../_lib/db.js';
-import { requireAdmin, json } from '../_lib/auth.js';
+import { verifyToken } from '../_lib/auth.js';
 
-export default async function handler(req) {
-  const url = new URL(req.url);
-  const id  = url.pathname.split('/').pop();
+export default async function handler(req, res) {
+  res.setHeader('Content-Type', 'application/json');
+  const { id } = req.query;
 
   if (req.method === 'GET') {
-    const rows = await sql`
-      SELECT b.*, COALESCE(json_agg(p.*) FILTER (WHERE p.id IS NOT NULL), '[]') as prices
-      FROM am_books b LEFT JOIN am_prices p ON p.book_id = b.id
-      WHERE b.id = ${id} GROUP BY b.id LIMIT 1
-    `;
-    if (!rows.length) return json({ error: 'Not found' }, 404);
-    return json({ book: rows[0] });
+    try {
+      const rows = await sql`
+        SELECT b.*, COALESCE(json_agg(p.*) FILTER (WHERE p.id IS NOT NULL), '[]') as prices
+        FROM am_books b LEFT JOIN am_prices p ON p.book_id = b.id
+        WHERE b.id = ${id} GROUP BY b.id LIMIT 1
+      `;
+      if (!rows.length) return res.status(404).json({ error: 'Not found' });
+      return res.status(200).json({ book: rows[0] });
+    } catch (e) { return res.status(500).json({ error: e.message }); }
   }
 
-  const auth = await requireAdmin(req);
-  if (auth instanceof Response) return auth;
+  try {
+    const auth = req.headers['authorization'] || '';
+    await verifyToken(auth.replace('Bearer ', '').trim());
+  } catch { return res.status(401).json({ error: 'No autorizado' }); }
 
   if (req.method === 'PUT') {
-    const body = await req.json();
-    const rows = await sql`
-      UPDATE am_books SET
-        slug=${body.slug}, title_es=${body.title_es}, title_en=${body.title_en||''},
-        subtitle_es=${body.subtitle_es||null}, subtitle_en=${body.subtitle_en||null},
-        description_es=${body.description_es||''}, description_en=${body.description_en||''},
-        cover_url=${body.cover_url||null}, pdf_url=${body.pdf_url||null},
-        isbn=${body.isbn||null}, year=${body.year||null},
-        is_published=${body.is_published||false}, sort_order=${body.sort_order||0}
-      WHERE id=${id} RETURNING *
-    `;
-    return json({ book: rows[0] });
+    const b = req.body;
+    try {
+      const rows = await sql`
+        UPDATE am_books SET slug=${b.slug}, title_es=${b.title_es}, title_en=${b.title_en||''},
+          subtitle_es=${b.subtitle_es||null}, subtitle_en=${b.subtitle_en||null},
+          description_es=${b.description_es||''}, description_en=${b.description_en||''},
+          cover_url=${b.cover_url||null}, pdf_url=${b.pdf_url||null},
+          isbn=${b.isbn||null}, year=${b.year||null},
+          is_published=${b.is_published||false}, sort_order=${b.sort_order||0}
+        WHERE id=${id} RETURNING *
+      `;
+      return res.status(200).json({ book: rows[0] });
+    } catch (e) { return res.status(500).json({ error: e.message }); }
   }
 
   if (req.method === 'DELETE') {
-    await sql`DELETE FROM am_books WHERE id = ${id}`;
-    return json({ ok: true });
+    try {
+      await sql`DELETE FROM am_books WHERE id = ${id}`;
+      return res.status(200).json({ ok: true });
+    } catch (e) { return res.status(500).json({ error: e.message }); }
   }
 
-  return json({ error: 'Method not allowed' }, 405);
+  return res.status(405).json({ error: 'Method not allowed' });
 }
