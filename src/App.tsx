@@ -12,6 +12,8 @@ import BookModal        from './components/ui/BookModal';
 import type { Book }    from './lib/books';
 import { useTranslation } from 'react-i18next';
 
+const Admin = lazy(() => import('./pages/Admin'));
+
 gsap.registerPlugin(ScrollTrigger);
 
 const HeroScene = lazy(() => import('./components/3d/HeroScene'));
@@ -24,6 +26,16 @@ function hasWebGL(): boolean {
 }
 
 function LoadingScreen() {
+
+  // Admin route
+  if (typeof window !== 'undefined' && window.location.pathname.startsWith('/admin')) {
+    return (
+      <Suspense fallback={<div style={{minHeight:'100vh',background:'#09080d'}}/>}>
+        <Admin />
+      </Suspense>
+    );
+  }
+
   return (
     <div style={{
       position: 'fixed', inset: 0, zIndex: 200, background: '#06060b',
