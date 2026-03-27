@@ -94,22 +94,32 @@ async function login() {
   const errEl = document.getElementById('login-err');
   errEl.innerHTML = '';
   try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 15000);
     const r = await fetch('/api/admin/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         email: document.getElementById('email').value,
         password: document.getElementById('password').value
-      })
+      }),
+      signal: controller.signal
     });
-    const d = await r.json();
-    if (!r.ok) throw new Error(d.error || 'Error');
+    clearTimeout(timeout);
+    const text = await r.text();
+    let d;
+    try { d = JSON.parse(text); } catch(e) { throw new Error('Respuesta inválida del servidor: ' + text.slice(0,100)); }
+    if (!r.ok) throw new Error(d.error || 'Error ' + r.status);
     TOKEN = d.token;
     localStorage.setItem('am_token', TOKEN);
     showPanel();
     loadBooks();
   } catch(e) {
-    errEl.innerHTML = `<div class="msg err">${e.message}</div>`;
+    if (e.name === 'AbortError') {
+      errEl.innerHTML = '<div class="msg err">⏱ Timeout — el servidor tardó demasiado. Verifica que DATABASE_URL esté configurada en Vercel.</div>';
+    } else {
+      errEl.innerHTML = `<div class="msg err">❌ ${e.message}</div>`;
+    }
   } finally {
     btn.disabled = false; btn.textContent = 'Ingresar';
   }
