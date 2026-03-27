@@ -5,6 +5,8 @@
   "framework": "vite",
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api/$1" },
+    { "source": "/admin(.*)", "destination": "/index.html" },
+    { "source": "/setup-admin", "destination": "/index.html" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }

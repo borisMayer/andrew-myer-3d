@@ -28,21 +28,24 @@ function hasWebGL(): boolean {
 
 function LoadingScreen() {
 
-  // Admin route
-  if (typeof window !== 'undefined' && window.location.pathname === '/setup-admin') {
-    return (
-      <Suspense fallback={<div style={{minHeight:'100vh',background:'#09080d'}}/>}>
-        <AdminSetup />
-      </Suspense>
-    );
-  }
-
-  if (typeof window !== 'undefined' && window.location.pathname.startsWith('/admin')) {
-    return (
-      <Suspense fallback={<div style={{minHeight:'100vh',background:'#09080d'}}/>}>
-        <Admin />
-      </Suspense>
-    );
+  // Admin route — supports both /admin and /#/admin (for Cloudflare proxy compat)
+  if (typeof window !== 'undefined') {
+    const path = window.location.pathname;
+    const hash = window.location.hash;
+    if (path === '/setup-admin' || hash === '#/setup-admin') {
+      return (
+        <Suspense fallback={<div style={{minHeight:'100vh',background:'#09080d'}}/>}>
+          <AdminSetup />
+        </Suspense>
+      );
+    }
+    if (path.startsWith('/admin') || hash.startsWith('#/admin')) {
+      return (
+        <Suspense fallback={<div style={{minHeight:'100vh',background:'#09080d'}}/>}>
+          <Admin />
+        </Suspense>
+      );
+    }
   }
 
   return (
