@@ -11,24 +11,26 @@
   label { display: block; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(160,155,145,0.5); margin-bottom: 0.3rem; font-family: monospace; }
   input { width: 100%; padding: 0.6rem 0.8rem; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 3px; color: rgba(220,215,205,0.9); font-size: 0.875rem; outline: none; margin-bottom: 0.85rem; }
   button { width: 100%; padding: 0.7rem; background: rgba(180,155,90,0.15); border: 1px solid rgba(180,155,90,0.45); border-radius: 3px; color: rgba(205,178,90,0.95); font-size: 13px; cursor: pointer; font-family: monospace; }
+  button:hover { background: rgba(180,155,90,0.25); }
+  button:disabled { opacity: 0.5; cursor: wait; }
   .eyebrow { font-family: monospace; font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(180,155,90,0.5); margin-bottom: 0.4rem; }
   h1 { font-family: Georgia, serif; font-size: 1.4rem; font-weight: 400; color: rgba(235,228,215,0.95); margin-bottom: 1.5rem; }
-  .msg { margin-top: 1rem; padding: 0.6rem 0.85rem; border-radius: 3px; font-size: 0.85rem; }
-  .ok  { background: rgba(60,160,80,0.12); border: 1px solid rgba(60,160,80,0.25); color: rgba(100,210,130,0.9); }
-  .err { background: rgba(200,70,55,0.1); border: 1px solid rgba(200,70,55,0.25); color: rgba(220,110,90,0.9); }
-  a.link { display: block; margin-top: 0.75rem; padding: 0.6rem; background: rgba(180,155,90,0.1); border: 1px solid rgba(180,155,90,0.3); border-radius: 3px; color: rgba(190,165,75,0.9); text-align: center; text-decoration: none; font-family: monospace; font-size: 12px; }
+  .ok  { margin-top:1rem; padding:0.6rem 0.85rem; border-radius:3px; background:rgba(60,160,80,0.12); border:1px solid rgba(60,160,80,0.25); color:rgba(100,210,130,0.9); font-size:0.85rem; }
+  .err { margin-top:1rem; padding:0.6rem 0.85rem; border-radius:3px; background:rgba(200,70,55,0.1); border:1px solid rgba(200,70,55,0.25); color:rgba(220,110,90,0.9); font-size:0.85rem; }
+  a.link { display:block; margin-top:0.75rem; padding:0.6rem; background:rgba(180,155,90,0.1); border:1px solid rgba(180,155,90,0.3); border-radius:3px; color:rgba(190,165,75,0.9); text-align:center; text-decoration:none; font-family:monospace; font-size:12px; }
 </style>
 </head>
 <body>
 <div class="card">
   <p class="eyebrow">Configuración inicial</p>
   <h1>Crear administrador</h1>
-  <label>Setup Key</label>
-  <input type="text" id="key" value="setup_andrew_2024" />
+
   <label>Email del admin</label>
   <input type="email" id="email" value="admin@andrewmyer.com" />
+
   <label>Contraseña</label>
   <input type="password" id="pw" placeholder="Mínimo 8 caracteres" onkeydown="if(event.key==='Enter')setup()" />
+
   <button onclick="setup()" id="btn">Crear admin</button>
   <div id="msg"></div>
 </div>
@@ -40,17 +42,22 @@ async function setup() {
   try {
     const r = await fetch('/api/admin/setup', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-setup-key': document.getElementById('key').value },
-      body: JSON.stringify({ email: document.getElementById('email').value, password: document.getElementById('pw').value })
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: document.getElementById('email').value,
+        password: document.getElementById('pw').value,
+        masterKey: 'ANDREW_MYER_SETUP_2024'
+      })
     });
     const d = await r.json();
     if (r.ok) {
-      document.getElementById('msg').innerHTML = '<div class="msg ok">✅ Admin creado. <a class="link" href="/admin.html">→ Ir al panel admin</a></div>';
+      document.getElementById('msg').innerHTML = 
+        '<div class="ok">✅ Admin creado exitosamente.<a class="link" href="/admin.html">→ Ir al panel admin</a></div>';
     } else {
-      document.getElementById('msg').innerHTML = `<div class="msg err">❌ ${d.error||JSON.stringify(d)}</div>`;
+      document.getElementById('msg').innerHTML = `<div class="err">❌ ${d.error}</div>`;
     }
   } catch(e) {
-    document.getElementById('msg').innerHTML = `<div class="msg err">❌ ${e.message}</div>`;
+    document.getElementById('msg').innerHTML = `<div class="err">❌ ${e.message}</div>`;
   } finally { btn.disabled = false; btn.textContent = 'Crear admin'; }
 }
 </script>

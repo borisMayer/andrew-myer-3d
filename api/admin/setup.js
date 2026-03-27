@@ -3,17 +3,20 @@ import { hashPassword } from '../_lib/crypto.js';
 
 export default async function handler(req, res) {
   res.setHeader('Content-Type', 'application/json');
+  
   if (req.method !== 'POST') return res.status(405).json({ error: 'POST only' });
-
-  const setupKey = req.headers['x-setup-key'];
-  if (!setupKey || setupKey !== process.env.SETUP_KEY) {
-    return res.status(403).json({ error: 'Clave de setup incorrecta' });
-  }
 
   try {
     await initTables();
-    const { email, password } = req.body;
+    const { email, password, masterKey } = req.body;
+    
+    // Simple hardcoded check - no env var dependency
+    if (masterKey !== 'ANDREW_MYER_SETUP_2024') {
+      return res.status(403).json({ error: 'Clave maestra incorrecta' });
+    }
+    
     if (!email || !password) return res.status(400).json({ error: 'Email y contraseña requeridos' });
+    
     const passwordHash = await hashPassword(password);
     await sql`
       INSERT INTO am_admin (email, password_hash)
