@@ -13,6 +13,7 @@ import type { Book }    from './lib/books';
 import { useTranslation } from 'react-i18next';
 
 const Admin = lazy(() => import('./pages/Admin'));
+const AdminSetup = lazy(() => import('./pages/AdminSetup'));
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -28,6 +29,14 @@ function hasWebGL(): boolean {
 function LoadingScreen() {
 
   // Admin route
+  if (typeof window !== 'undefined' && window.location.pathname === '/setup-admin') {
+    return (
+      <Suspense fallback={<div style={{minHeight:'100vh',background:'#09080d'}}/>}>
+        <AdminSetup />
+      </Suspense>
+    );
+  }
+
   if (typeof window !== 'undefined' && window.location.pathname.startsWith('/admin')) {
     return (
       <Suspense fallback={<div style={{minHeight:'100vh',background:'#09080d'}}/>}>
