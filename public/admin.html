@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Andrew Myer</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { min-height: 100vh; background: #09080d; color: rgba(220,215,205,0.9); font-family: 'Inter', sans-serif; display: flex; align-items: center; justify-content: center; }
+  .card { width: min(420px,95vw); background: rgba(14,13,18,0.98); border: 1px solid rgba(255,255,255,0.07); border-top: 2px solid rgba(180,155,90,0.5); border-radius: 4px; padding: 2rem; }
+  label { display: block; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(160,155,145,0.5); margin-bottom: 0.3rem; font-family: monospace; }
+  input { width: 100%; padding: 0.6rem 0.8rem; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 3px; color: rgba(220,215,205,0.9); font-size: 0.875rem; outline: none; margin-bottom: 0.85rem; }
+  input:focus { border-color: rgba(180,155,90,0.5); }
+  button { width: 100%; padding: 0.7rem; background: rgba(180,155,90,0.15); border: 1px solid rgba(180,155,90,0.45); border-radius: 3px; color: rgba(205,178,90,0.95); font-size: 13px; cursor: pointer; font-family: monospace; letter-spacing: 0.05em; }
+  button:hover { background: rgba(180,155,90,0.25); }
+  button:disabled { opacity: 0.5; cursor: wait; }
+  .msg { margin-top: 1rem; padding: 0.6rem 0.85rem; border-radius: 3px; font-size: 0.85rem; line-height: 1.5; }
+  .ok  { background: rgba(60,160,80,0.12); border: 1px solid rgba(60,160,80,0.25); color: rgba(100,210,130,0.9); }
+  .err { background: rgba(200,70,55,0.1); border: 1px solid rgba(200,70,55,0.25); color: rgba(220,110,90,0.9); }
+  .link { display: block; margin-top: 0.75rem; padding: 0.6rem; background: rgba(180,155,90,0.1); border: 1px solid rgba(180,155,90,0.3); border-radius: 3px; color: rgba(190,165,75,0.9); text-align: center; text-decoration: none; font-family: monospace; font-size: 12px; }
+  .eyebrow { font-family: monospace; font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(180,155,90,0.5); margin-bottom: 0.4rem; }
+  h1 { font-family: Georgia, serif; font-size: 1.4rem; font-weight: 400; color: rgba(235,228,215,0.95); margin-bottom: 1.5rem; }
+  .tab { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; }
+  .tab button { background: transparent; border: 1px solid rgba(255,255,255,0.08); color: rgba(155,150,140,0.6); font-size: 11px; padding: 0.35rem 0.85rem; width: auto; }
+  .tab button.active { background: rgba(180,155,90,0.14); border-color: rgba(180,155,90,0.4); color: rgba(195,170,80,0.95); }
+
+  /* Panel styles */
+  #panel { display: none; }
+  #panel.show { display: block; }
+  #login.hide { display: none; }
+  .book-row { padding: 0.85rem; border-bottom: 1px solid rgba(255,255,255,0.04); display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
+  .book-title { font-size: 0.875rem; color: rgba(215,208,195,0.88); }
+  .book-slug { font-family: monospace; font-size: 10px; color: rgba(140,135,125,0.5); }
+  .badge { display: inline-block; padding: 2px 7px; border-radius: 2px; font-size: 10px; font-family: monospace; }
+  .pub { background: rgba(60,160,80,0.14); border: 1px solid rgba(60,160,80,0.3); color: rgba(100,210,130,0.9); }
+  .dra { background: rgba(180,155,90,0.1); border: 1px solid rgba(180,155,90,0.25); color: rgba(180,155,90,0.8); }
+  .btn-sm { width: auto; padding: 0.3rem 0.7rem; font-size: 11px; }
+  .price-tag { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; background: rgba(180,155,90,0.1); border: 1px solid rgba(180,155,90,0.2); border-radius: 2px; font-family: monospace; font-size: 11px; color: rgba(205,178,90,0.9); }
+  .section { background: rgba(14,13,18,0.98); border: 1px solid rgba(255,255,255,0.07); border-radius: 4px; overflow: hidden; margin-bottom: 1rem; }
+  .section-header { padding: 0.85rem 1.25rem; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: space-between; }
+  .section-title { font-size: 0.875rem; font-weight: 500; color: rgba(200,195,185,0.85); }
+  textarea { width: 100%; padding: 0.6rem 0.8rem; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 3px; color: rgba(220,215,205,0.9); font-size: 0.875rem; outline: none; resize: vertical; min-height: 70px; margin-bottom: 0.85rem; }
+  select { width: 100%; padding: 0.5rem 0.8rem; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 3px; color: rgba(220,215,205,0.9); font-size: 0.875rem; outline: none; margin-bottom: 0.85rem; }
+  .g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+  nav { background: rgba(6,5,10,0.98); border-bottom: 1px solid rgba(255,255,255,0.06); padding: 0.85rem 2rem; display: flex; align-items: center; justify-content: space-between; position: fixed; top: 0; left: 0; right: 0; z-index: 100; }
+  .logo { font-family: Georgia, serif; font-size: 1.1rem; color: rgba(235,228,215,0.9); }
+  .admin-badge { font-family: monospace; font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(180,155,90,0.5); padding: 2px 7px; border: 1px solid rgba(180,155,90,0.2); border-radius: 2px; }
+  main { max-width: 900px; margin: 0 auto; padding: 6rem 1.5rem 2rem; }
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="card" id="login">
+  <p class="eyebrow">Panel de administración</p>
+  <h1>Andrew Myer</h1>
+  <label>Email</label>
+  <input type="email" id="email" value="admin@andrewmyer.com" />
+  <label>Contraseña</label>
+  <input type="password" id="password" onkeydown="if(event.key==='Enter')login()" />
+  <div id="login-err"></div>
+  <button onclick="login()" id="login-btn">Ingresar</button>
+</div>
+
+<!-- PANEL -->
+<div id="panel" style="width:100%">
+  <nav>
+    <div style="display:flex;align-items:center;gap:0.75rem">
+      <span class="logo">Andrew Myer</span>
+      <span class="admin-badge">Admin</span>
+    </div>
+    <div style="display:flex;gap:0.5rem;align-items:center">
+      <a href="/" style="font-family:monospace;font-size:10px;color:rgba(140,135,125,0.6);text-decoration:none;margin-right:0.5rem">← Sitio</a>
+      <button class="tab active btn-sm" id="tab-books" onclick="showTab('books')">Libros</button>
+      <button class="tab btn-sm" id="tab-sales" onclick="showTab('sales')">Ventas</button>
+      <button style="width:auto;padding:0.3rem 0.7rem;font-size:11px;background:transparent;border:1px solid rgba(255,255,255,0.1);color:rgba(160,155,145,0.7)" onclick="logout()">Salir</button>
+    </div>
+  </nav>
+  <main>
+    <div id="books-tab"></div>
+    <div id="sales-tab" style="display:none"></div>
+  </main>
+</div>
+
+<script>
+let TOKEN = localStorage.getItem('am_token') || '';
+
+// Auto-login if token exists
+if (TOKEN) { showPanel(); loadBooks(); }
+
+async function login() {
+  const btn = document.getElementById('login-btn');
+  btn.disabled = true; btn.textContent = 'Autenticando…';
+  const errEl = document.getElementById('login-err');
+  errEl.innerHTML = '';
+  try {
+    const r = await fetch('/api/admin/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: document.getElementById('email').value,
+        password: document.getElementById('password').value
+      })
+    });
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.error || 'Error');
+    TOKEN = d.token;
+    localStorage.setItem('am_token', TOKEN);
+    showPanel();
+    loadBooks();
+  } catch(e) {
+    errEl.innerHTML = `<div class="msg err">${e.message}</div>`;
+  } finally {
+    btn.disabled = false; btn.textContent = 'Ingresar';
+  }
+}
+
+function logout() {
+  localStorage.removeItem('am_token');
+  TOKEN = '';
+  document.getElementById('login').classList.remove('hide');
+  document.getElementById('panel').classList.remove('show');
+}
+
+function showPanel() {
+  document.getElementById('login').classList.add('hide');
+  document.getElementById('panel').classList.add('show');
+  document.body.style.display = 'block';
+  document.body.style.alignItems = 'flex-start';
+}
+
+function showTab(tab) {
+  document.getElementById('books-tab').style.display = tab==='books'?'block':'none';
+  document.getElementById('sales-tab').style.display = tab==='sales'?'block':'none';
+  document.getElementById('tab-books').classList.toggle('active', tab==='books');
+  document.getElementById('tab-sales').classList.toggle('active', tab==='sales');
+  if (tab==='sales') loadSales();
+}
+
+// ── BOOKS ──────────────────────────────────────────────────────────
+async function loadBooks() {
+  const el = document.getElementById('books-tab');
+  el.innerHTML = '<p style="color:rgba(160,155,145,0.5);padding:1rem">Cargando…</p>';
+  const r = await fetch('/api/books?published=false', { headers: { Authorization: `Bearer ${TOKEN}` } });
+  const d = await r.json();
+  renderBooks(d.books || []);
+}
+
+function renderBooks(books) {
+  const el = document.getElementById('books-tab');
+  el.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem">
+      <h2 style="font-family:Georgia,serif;font-size:1.3rem;font-weight:400;color:rgba(235,228,215,0.95)">Catálogo</h2>
+      <button class="btn-sm" onclick="showNewBookForm()">+ Nuevo libro</button>
+    </div>
+    <div id="new-book-form"></div>
+    <div class="section" id="books-list">
+      ${books.length === 0 ? '<p style="padding:1.5rem;color:rgba(160,155,145,0.5);font-size:0.875rem">Sin libros aún. Crea el primero.</p>' : books.map(b => bookRow(b)).join('')}
+    </div>
+  `;
+}
+
+function bookRow(b) {
+  const prices = (b.prices||[]).map(p => `<span class="price-tag">${p.currency} ${Number(p.amount).toLocaleString()}</span>`).join(' ');
+  return `
+    <div class="book-row" id="row-${b.id}">
+      <div style="flex:1;min-width:0">
+        <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.25rem;flex-wrap:wrap">
+          <span class="badge ${b.is_published?'pub':'dra'}">${b.is_published?'● Publicado':'○ Borrador'}</span>
+          <span class="book-slug">${b.slug}</span>
+        </div>
+        <p class="book-title">${b.title_es}</p>
+        ${b.title_en ? `<p style="font-family:monospace;font-size:11px;color:rgba(140,135,125,0.45)">${b.title_en}</p>` : ''}
+        <div style="display:flex;flex-wrap:wrap;gap:0.35rem;margin-top:0.5rem">${prices}</div>
+        <div style="margin-top:0.4rem;display:flex;gap:0.85rem">
+          <span style="font-family:monospace;font-size:10px;color:${b.pdf_url?'rgba(100,210,130,0.7)':'rgba(200,100,80,0.6)'}">${b.pdf_url?'✓ PDF':'✗ Sin PDF'}</span>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:0.4rem;flex-shrink:0">
+        <button class="btn-sm" onclick="editBook('${b.id}')">Editar</button>
+        <button class="btn-sm" onclick="togglePublish('${b.id}', ${!b.is_published})">${b.is_published?'Ocultar':'Publicar'}</button>
+        <button class="btn-sm" style="background:rgba(200,70,55,0.1);border-color:rgba(200,70,55,0.3);color:rgba(220,110,90,0.85)" onclick="deleteBook('${b.id}','${b.title_es.replace(/'/g,"\\'")}')">Eliminar</button>
+      </div>
+    </div>
+    <div id="prices-${b.id}" style="padding:0.75rem 1.25rem;background:rgba(255,255,255,0.01);border-top:1px solid rgba(255,255,255,0.04)">
+      ${pricesForm(b)}
+    </div>
+    <div id="edit-${b.id}"></div>
+  `;
+}
+
+function pricesForm(b) {
+  const currencies = ['CLP','ARS','USD','MXN','COP'];
+  return `
+    <p style="font-family:monospace;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:rgba(160,155,145,0.45);margin-bottom:0.5rem">Agregar / actualizar precio</p>
+    <div style="display:flex;gap:0.5rem;align-items:flex-end;flex-wrap:wrap">
+      <select id="cur-${b.id}" style="width:90px;margin:0">
+        ${currencies.map(c=>`<option>${c}</option>`).join('')}
+      </select>
+      <input type="number" id="amt-${b.id}" placeholder="9990" style="width:120px;margin:0" />
+      <button class="btn-sm" onclick="addPrice('${b.id}')">+ Precio</button>
+    </div>
+  `;
+}
+
+async function addPrice(bookId) {
+  const cur = document.getElementById(`cur-${bookId}`).value;
+  const amt = document.getElementById(`amt-${bookId}`).value;
+  if (!amt) return alert('Ingresa un monto');
+  await fetch('/api/books/prices', {
+    method: 'POST',
+    headers: { 'Content-Type':'application/json', 'Authorization':`Bearer ${TOKEN}` },
+    body: JSON.stringify({ book_id: bookId, currency: cur, amount: Number(amt), is_active: true })
+  });
+  loadBooks();
+}
+
+async function togglePublish(id, pub) {
+  const r = await fetch(`/api/books/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type':'application/json', 'Authorization':`Bearer ${TOKEN}` },
+    body: JSON.stringify({ is_published: pub })
+  });
+  if (r.ok) loadBooks();
+}
+
+async function deleteBook(id, title) {
+  if (!confirm(`¿Eliminar "${title}"?`)) return;
+  await fetch(`/api/books/${id}`, { method:'DELETE', headers:{ Authorization:`Bearer ${TOKEN}` } });
+  loadBooks();
+}
+
+function showNewBookForm() {
+  document.getElementById('new-book-form').innerHTML = bookForm(null);
+}
+
+function editBook(id) {
+  // Fetch current book data and show inline form
+  fetch(`/api/books/${id}`, { headers:{ Authorization:`Bearer ${TOKEN}` } })
+    .then(r=>r.json())
+    .then(d => {
+      const b = d.book;
+      document.getElementById(`edit-${id}`).innerHTML = bookForm(b);
+    });
+}
+
+function bookForm(b) {
+  const isNew = !b;
+  return `
+    <div style="padding:1.25rem;background:rgba(14,13,18,0.98);border:1px solid rgba(180,155,90,0.2);border-radius:4px;margin-bottom:1rem">
+      <p style="font-family:monospace;font-size:11px;color:rgba(180,155,90,0.7);margin-bottom:1rem;font-weight:500">${isNew?'Nuevo libro':`Editando: ${b.title_es}`}</p>
+      <div class="g2">
+        <div><label>Slug *</label><input id="f-slug" value="${b?.slug||''}" placeholder="entre-dos-mundos-vol1"/></div>
+        <div><label>ISBN</label><input id="f-isbn" value="${b?.isbn||''}"/></div>
+      </div>
+      <div class="g2">
+        <div><label>Título ES *</label><input id="f-title-es" value="${b?.title_es||''}"/></div>
+        <div><label>Título EN</label><input id="f-title-en" value="${b?.title_en||''}"/></div>
+      </div>
+      <div class="g2">
+        <div><label>Subtítulo ES</label><input id="f-sub-es" value="${b?.subtitle_es||''}"/></div>
+        <div><label>Subtítulo EN</label><input id="f-sub-en" value="${b?.subtitle_en||''}"/></div>
+      </div>
+      <label>Descripción ES</label><textarea id="f-desc-es">${b?.description_es||''}</textarea>
+      <label>Descripción EN</label><textarea id="f-desc-en">${b?.description_en||''}</textarea>
+      <div class="g2">
+        <div><label>URL Portada</label><input id="f-cover" value="${b?.cover_url||''}" placeholder="https://..."/></div>
+        <div><label>URL PDF</label><input id="f-pdf" value="${b?.pdf_url||''}" placeholder="https://..."/></div>
+      </div>
+      <div class="g2">
+        <div><label>Año</label><input id="f-year" type="number" value="${b?.year||new Date().getFullYear()}"/></div>
+        <div><label>Orden</label><input id="f-order" type="number" value="${b?.sort_order||0}"/></div>
+      </div>
+      <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.875rem;color:rgba(200,195,185,0.8);text-transform:none;letter-spacing:0;margin-bottom:1rem">
+        <input type="checkbox" id="f-pub" ${b?.is_published?'checked':''}/> Publicado
+      </label>
+      <div id="form-err-${b?.id||'new'}"></div>
+      <div style="display:flex;gap:0.5rem">
+        <button class="btn-sm" onclick="saveBook('${b?.id||''}')">${isNew?'Crear libro':'Guardar cambios'}</button>
+        <button class="btn-sm" style="background:transparent;border-color:rgba(255,255,255,0.1);color:rgba(160,155,145,0.7)" onclick="loadBooks()">Cancelar</button>
+      </div>
+    </div>
+  `;
+}
+
+async function saveBook(id) {
+  const body = {
+    slug: document.getElementById('f-slug').value,
+    title_es: document.getElementById('f-title-es').value,
+    title_en: document.getElementById('f-title-en').value,
+    subtitle_es: document.getElementById('f-sub-es').value || null,
+    subtitle_en: document.getElementById('f-sub-en').value || null,
+    description_es: document.getElementById('f-desc-es').value,
+    description_en: document.getElementById('f-desc-en').value,
+    cover_url: document.getElementById('f-cover').value || null,
+    pdf_url: document.getElementById('f-pdf').value || null,
+    isbn: document.getElementById('f-isbn').value || null,
+    year: Number(document.getElementById('f-year').value) || null,
+    sort_order: Number(document.getElementById('f-order').value) || 0,
+    is_published: document.getElementById('f-pub').checked,
+  };
+  if (!body.slug || !body.title_es) { alert('Slug y Título ES son requeridos'); return; }
+  const r = await fetch(id ? `/api/books/${id}` : '/api/books', {
+    method: id ? 'PUT' : 'POST',
+    headers: { 'Content-Type':'application/json', 'Authorization':`Bearer ${TOKEN}` },
+    body: JSON.stringify(body)
+  });
+  if (r.ok) { loadBooks(); } else { const d=await r.json(); alert('Error: '+d.error); }
+}
+
+// ── SALES ──────────────────────────────────────────────────────────
+async function loadSales() {
+  const el = document.getElementById('sales-tab');
+  el.innerHTML = '<p style="color:rgba(160,155,145,0.5);padding:1rem">Cargando…</p>';
+  const r = await fetch('/api/admin/sales', { headers: { Authorization: `Bearer ${TOKEN}` } });
+  const d = await r.json();
+  const sales = d.sales || [];
+  el.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem">
+      <h2 style="font-family:Georgia,serif;font-size:1.3rem;font-weight:400;color:rgba(235,228,215,0.95)">Ventas</h2>
+      <button class="btn-sm" onclick="loadSales()">↻ Actualizar</button>
+    </div>
+    ${sales.length===0
+      ? '<p style="color:rgba(160,155,145,0.5);font-size:0.875rem">Sin ventas aún.</p>'
+      : `<div class="section">${sales.map((s,i)=>`
+        <div style="padding:0.85rem 1.25rem;border-bottom:${i<sales.length-1?'1px solid rgba(255,255,255,0.04)':'none'};display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
+          <div style="flex:1;min-width:180px">
+            <p style="font-size:0.875rem;color:rgba(215,208,195,0.88);margin-bottom:2px">${s.title_es}</p>
+            <p style="font-family:monospace;font-size:11px;color:rgba(140,135,125,0.55)">${s.buyer_email}${s.buyer_name?' · '+s.buyer_name:''}</p>
+          </div>
+          <div style="display:flex;align-items:center;gap:0.75rem">
+            <span style="font-family:monospace;font-size:12px;color:rgba(210,185,100,0.9)">${s.currency} ${Number(s.amount).toLocaleString()}</span>
+            <span class="badge ${s.status==='APPROVED'?'pub':s.status==='REJECTED'?'':'dra'}">${s.status}</span>
+            <span style="font-family:monospace;font-size:10px;color:rgba(130,125,115,0.45)">${new Date(s.created_at).toLocaleDateString('es-CL')}</span>
+          </div>
+        </div>`).join('')}
+        </div>`
+    }
+  `;
+}
+</script>
+</body>
+</html>
