@@ -6,7 +6,7 @@
 <title>Admin — Andrew Myer</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { min-height: 100vh; background: #09080d; color: rgba(220,215,205,0.9); font-family: 'Inter', sans-serif; display: flex; align-items: center; justify-content: center; }
+  body { min-height: 100vh; background: #09080d; color: rgba(220,215,205,0.9); font-family: 'Inter', sans-serif; }
   .card { width: min(420px,95vw); background: rgba(14,13,18,0.98); border: 1px solid rgba(255,255,255,0.07); border-top: 2px solid rgba(180,155,90,0.5); border-radius: 4px; padding: 2rem; }
   label { display: block; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(160,155,145,0.5); margin-bottom: 0.3rem; font-family: monospace; }
   input { width: 100%; padding: 0.6rem 0.8rem; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 3px; color: rgba(220,215,205,0.9); font-size: 0.875rem; outline: none; margin-bottom: 0.85rem; }
@@ -51,7 +51,7 @@
 <body>
 
 <!-- LOGIN -->
-<div class="card" id="login">
+<div class="card" id="login" style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%)">
   <p class="eyebrow">Panel de administración</p>
   <h1>Andrew Myer</h1>
   <label>Email</label>
@@ -87,14 +87,30 @@
 <script>
 let TOKEN = localStorage.getItem('am_token') || '';
 
-// Auto-login if token exists — validate first
+// Auto-login if token exists — always show login first, then auto-enter if valid
 if (TOKEN) {
-  fetch('/api/admin/sales', { headers: { Authorization: `Bearer ${TOKEN}` } })
+  fetch('/api/admin/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ _validateToken: TOKEN })
+  }).catch(() => {});
+  // Validate token by calling a protected endpoint
+  fetch('/api/admin/sales', { headers: { Authorization: 'Bearer ' + TOKEN } })
     .then(r => {
-      if (r.ok || r.status === 200) { showPanel(); loadBooks(); }
-      else { localStorage.removeItem('am_token'); TOKEN = ''; }
+      if (r.status === 200 || r.status === 204) {
+        showPanel();
+        loadBooks();
+      } else {
+        // Token invalid — clear it and show login
+        localStorage.removeItem('am_token');
+        TOKEN = '';
+        document.getElementById('login').style.display = 'flex';
+      }
     })
-    .catch(() => { localStorage.removeItem('am_token'); TOKEN = ''; });
+    .catch(() => {
+      localStorage.removeItem('am_token');
+      TOKEN = '';
+    });
 }
 
 async function login() {
