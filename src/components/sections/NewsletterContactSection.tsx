@@ -26,9 +26,28 @@ export default function NewsletterContactSection() {
   const handleSub = (e: React.FormEvent) => {
     e.preventDefault(); if (email) { setSubDone(true); setEmail(''); }
   };
-  const handleContact = (e: React.FormEvent) => {
-    e.preventDefault(); setSending(true);
-    setTimeout(() => { setSending(false); setSent(true); setName(''); setUserEmail(''); setMessage(''); }, 1400);
+  const [contactError, setContactError] = useState('');
+
+  const handleContact = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!name || !userEmail || !message) return;
+    setSending(true);
+    setContactError('');
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email: userEmail, message }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Error al enviar');
+      setSent(true);
+      setName(''); setUserEmail(''); setMessage('');
+    } catch (err: any) {
+      setContactError(err.message);
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
@@ -124,6 +143,11 @@ export default function NewsletterContactSection() {
                   onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.borderColor = 'rgba(180,155,90,0.3)'; }}>
                     {sending ? t('contact.sending') : t('contact.send')}
                   </button>
+                  {contactError && (
+                    <p style={{ fontFamily:'var(--font-sans)', fontSize:'0.82rem', color:'rgba(220,100,80,0.85)', marginTop:'0.5rem', padding:'0.5rem 0.75rem', background:'rgba(220,80,60,0.08)', border:'1px solid rgba(220,80,60,0.2)', borderRadius:'2px' }}>
+                      {contactError}
+                    </p>
+                  )}
                 </form>
               )}
             </div>
