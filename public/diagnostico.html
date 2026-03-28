@@ -17,7 +17,7 @@
 <div>
   <button onclick="loadSales()">📋 Ver todas las ventas</button>
   <button onclick="testWebhook()">🔧 Test webhook manual</button>
-  <button onclick="fixPending()">⚡ Forzar check de ventas PENDING</button>
+  <button onclick="recoverPending()" style="background:rgba(60,160,80,0.15);border-color:rgba(60,160,80,0.4);color:rgba(100,210,130,0.9)">⚡ RECUPERAR ventas PENDING (consulta MP)</button>
 </div>
 <pre id="out">Ingresa tu token y haz click en una acción...</pre>
 
@@ -55,21 +55,32 @@ async function testWebhook() {
   log('GET /api/payment/webhook → ' + JSON.stringify(d));
 }
 
-async function fixPending() {
+async function recoverPending() {
   const token = getToken();
-  log('Cargando ventas PENDING...');
-  const r = await fetch('/api/admin/sales', {headers:{Authorization:'Bearer '+token}});
-  const d = await r.json();
-  const pending = (d.sales || []).filter(s => s.status === 'PENDING' && s.mp_preference_id);
-  
-  if (pending.length === 0) {
-    log('No hay ventas PENDING con preference_id para procesar.\n\nVentas totales: ' + (d.sales||[]).length);
-    return;
+  if (!token) { log('Ingresa tu token primero'); return; }
+  log('Consultando Mercado Pago para ventas PENDING...\nEsto puede tardar unos segundos...');
+  try {
+    const r = await fetch('/api/admin/sales', {
+      method: 'POST',
+      headers: {Authorization: 'Bearer '+token, 'Content-Type': 'application/json'}
+    });
+    const d = await r.json();
+    if (!r.ok) { log('ERROR: ' + JSON.stringify(d)); return; }
+    log('RESULTADO:\n' +
+      'Total PENDING procesadas: ' + d.total + '\n' +
+      'Recuperadas como APPROVED: ' + d.recovered + '\n\n' +
+      'Detalle:\n' +
+      (d.results||[]).map(r => 
+        `${r.email} | ${r.book}\n` +
+        `  Estado MP: ${r.mp_status || 'no encontrado'}\n` +
+        `  Resultado: ${r.status}\n` +
+        (r.download_url ? `  Descarga: ${r.download_url}\n` : '') +
+        (r.error ? `  Error: ${r.error}\n` : '')
+      ).join('\n')
+    );
+  } catch(e) {
+    log('Error de red: ' + e.message);
   }
-  
-  log(`Encontradas ${pending.length} venta(s) PENDING con preference_id.\nCada una requiere que MP envíe el webhook con el payment_id.\n\nVentas PENDING:\n` +
-    pending.map(s => `- ${s.id} | ${s.buyer_email} | pref: ${s.mp_preference_id}`).join('\n')
-  );
 }
 </script>
 </body>
