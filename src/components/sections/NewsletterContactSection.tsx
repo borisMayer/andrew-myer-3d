@@ -23,8 +23,25 @@ export default function NewsletterContactSection() {
   const onFocus: React.FocusEventHandler = e => { (e.target as HTMLElement).style.borderColor = 'rgba(180,155,90,0.35)'; };
   const onBlur:  React.FocusEventHandler = e => { (e.target as HTMLElement).style.borderColor = 'rgba(255,255,255,0.08)'; };
 
-  const handleSub = (e: React.FormEvent) => {
-    e.preventDefault(); if (email) { setSubDone(true); setEmail(''); }
+  const [subError, setSubError] = useState('');
+
+  const handleSub = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email || !email.includes('@')) return;
+    setSubError('');
+    try {
+      const res = await fetch('/api/newsletter', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Error');
+      setSubDone(true);
+      setEmail('');
+    } catch (err: any) {
+      setSubError(err.message);
+    }
   };
   const [contactError, setContactError] = useState('');
 

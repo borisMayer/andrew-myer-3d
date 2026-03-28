@@ -73,12 +73,14 @@
       <a href="/" style="font-family:monospace;font-size:10px;color:rgba(140,135,125,0.6);text-decoration:none;margin-right:0.5rem">← Sitio</a>
       <button class="tab active btn-sm" id="tab-books" onclick="showTab('books')">Libros</button>
       <button class="tab btn-sm" id="tab-sales" onclick="showTab('sales')">Ventas</button>
+      <button class="tab btn-sm" id="tab-subs" onclick="showTab('subs')">Newsletter</button>
       <button style="width:auto;padding:0.3rem 0.7rem;font-size:11px;background:transparent;border:1px solid rgba(255,255,255,0.1);color:rgba(160,155,145,0.7)" onclick="logout()">Salir</button>
     </div>
   </nav>
   <main>
     <div id="books-tab"></div>
     <div id="sales-tab" style="display:none"></div>
+    <div id="subs-tab" style="display:none"></div>
   </main>
 </div>
 
@@ -140,11 +142,12 @@ function showPanel() {
 }
 
 function showTab(tab) {
-  document.getElementById('books-tab').style.display = tab==='books'?'block':'none';
-  document.getElementById('sales-tab').style.display = tab==='sales'?'block':'none';
-  document.getElementById('tab-books').classList.toggle('active', tab==='books');
-  document.getElementById('tab-sales').classList.toggle('active', tab==='sales');
+  ['books','sales','subs'].forEach(t => {
+    document.getElementById(t+'-tab').style.display = tab===t?'block':'none';
+    document.getElementById('tab-'+t).classList.toggle('active', tab===t);
+  });
   if (tab==='sales') loadSales();
+  if (tab==='subs') loadSubs();
 }
 
 // ── BOOKS ──────────────────────────────────────────────────────────
@@ -347,6 +350,48 @@ async function loadSales() {
         </div>`
     }
   `;
+}
+
+// ── NEWSLETTER ─────────────────────────────────────────────────────────
+async function loadSubs() {
+  const el = document.getElementById('subs-tab');
+  el.innerHTML = '<p style="color:rgba(160,155,145,0.5);padding:1rem">Cargando…</p>';
+  const r = await fetch('/api/newsletter/list', { headers: { Authorization: `Bearer ${TOKEN}` } });
+  if (!r.ok) { el.innerHTML = '<p style="color:rgba(220,110,90,0.8);padding:1rem">No se pudo cargar</p>'; return; }
+  const d = await r.json();
+  const subs = d.subscribers || [];
+  el.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem">
+      <h2 style="font-family:Georgia,serif;font-size:1.3rem;font-weight:400;color:rgba(235,228,215,0.95)">Newsletter <span style="font-size:0.9rem;font-family:monospace;color:rgba(180,155,90,0.7)">${subs.length} suscriptores</span></h2>
+      <button class="btn-sm" onclick="loadSubs()">↻ Actualizar</button>
+    </div>
+    ${subs.length===0
+      ? '<p style="color:rgba(160,155,145,0.5);font-size:0.875rem">Sin suscriptores aún.</p>'
+      : `<div class="section">${subs.map((s,i)=>`
+        <div style="padding:0.7rem 1.25rem;border-bottom:${i<subs.length-1?'1px solid rgba(255,255,255,0.04)':'none'};display:flex;align-items:center;justify-content:space-between;">
+          <span style="font-family:monospace;font-size:12px;color:rgba(215,208,195,0.85)">${s.email}</span>
+          <span style="font-family:monospace;font-size:10px;color:rgba(130,125,115,0.45)">${new Date(s.created_at).toLocaleDateString('es-CL')}</span>
+        </div>`).join('')}
+        </div>`
+    }
+    ${subs.length > 0 ? `
+    <div style="margin-top:1rem">
+      <button class="btn-sm" onclick="exportSubs()">↓ Exportar CSV</button>
+    </div>` : ''}
+  `;
+}
+
+function exportSubs() {
+  fetch('/api/newsletter/list', { headers: { Authorization: `Bearer ${TOKEN}` } })
+    .then(r=>r.json())
+    .then(d => {
+      const csv = 'Email,Fecha
+' + (d.subscribers||[]).map(s=>`${s.email},${new Date(s.created_at).toLocaleDateString('es-CL')}`).join('
+');
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href=url; a.download='suscriptores.csv'; a.click();
+    });
 }
 </script>
 </body>
