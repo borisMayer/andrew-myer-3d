@@ -2,6 +2,9 @@ import { neon } from '@neondatabase/serverless';
 
 export default async function handler(req, res) {
   res.setHeader('Content-Type', 'application/json');
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  
   const saleId = req.query?.sale;
   if (!saleId) return res.status(400).json({ error: 'sale ID requerido' });
 
@@ -14,9 +17,8 @@ export default async function handler(req, res) {
       LIMIT 1
     `;
     if (!rows.length) return res.status(404).json({ error: 'Venta no encontrada' });
-    const { status, download_token, download_expires_at, title_es } = rows[0];
 
-    // Don't expose token if expired
+    const { status, download_token, download_expires_at, title_es } = rows[0];
     const expired = download_expires_at && new Date(download_expires_at) < new Date();
 
     return res.status(200).json({
