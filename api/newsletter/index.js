@@ -33,7 +33,7 @@ export default async function handler(req, res) {
           method: 'POST',
           headers: { Authorization: `Bearer ${process.env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            from: 'Sitio Andrew Myer <onboarding@resend.dev>',
+            from: 'Andrew Myer <contacto@andrewmyer.com>',
             to: ['bmayer.rojel@gmail.com'],
             subject: `Nuevo suscriptor — ${email}`,
             text: `Nuevo suscriptor: ${email}`,

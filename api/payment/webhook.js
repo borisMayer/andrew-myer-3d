@@ -6,7 +6,7 @@ async function sendEmail(to, name, title, downloadUrl, apiKey) {
     method: 'POST',
     headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      from: 'Andrew Myer <onboarding@resend.dev>',
+      from: 'Andrew Myer <contacto@andrewmyer.com>',
       to: [to],
       reply_to: 'contacto@andrewmyer.com',
       subject: `📄 Tu libro: ${title}`,
