@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Seed Books</title>
+<style>
+  body { background:#09080d; color:rgba(220,215,205,0.9); font-family:monospace; padding:2rem; }
+  button { padding:0.7rem 1.5rem; background:rgba(180,155,90,0.15); border:1px solid rgba(180,155,90,0.45); border-radius:3px; color:rgba(205,178,90,0.95); font-size:13px; cursor:pointer; margin-bottom:1rem; display:block; }
+  .log { background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:3px; padding:1rem; margin-top:1rem; font-size:12px; line-height:1.8; white-space:pre-wrap; }
+  .ok  { color:rgba(100,210,130,0.9); }
+  .err { color:rgba(220,110,90,0.9); }
+  input { padding:0.5rem 0.75rem; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:3px; color:rgba(220,215,205,0.9); font-size:13px; width:100%; margin-bottom:1rem; }
+</style>
+</head>
+<body>
+<h2 style="margin-bottom:1rem;font-family:Georgia,serif;font-weight:400">Cargar libros iniciales</h2>
+<p style="margin-bottom:1rem;font-size:12px;color:rgba(160,155,145,0.6)">Pega tu token de admin (de localStorage en admin.html):</p>
+<input type="text" id="token" placeholder="Token JWT del admin..." />
+<button onclick="seed()">⚡ Crear los 5 libros con precios</button>
+<div class="log" id="log">Esperando...</div>
+
+<script>
+const BOOKS = [
+  {
+    slug: 'entre-dos-mundos-vol1',
+    title_es: 'Entre Dos Mundos, Vol. I',
+    title_en: 'Between Two Worlds, Vol. I',
+    subtitle_es: 'El Poder del Kadish y el Rugido del León',
+    subtitle_en: 'The Power of the Kaddish and the Roar of the Lion',
+    description_es: 'Crónica de una odisea espiritual que comenzó en una Unidad de Cuidados Intensivos durante la pandemia de COVID-19. El autor relata su travesía a través de las dimensiones de las tinieblas y la gloria celestial mientras su cuerpo permanecía en coma.',
+    description_en: 'Chronicle of a spiritual odyssey that began in an Intensive Care Unit during the COVID-19 pandemic.',
+    year: 2023, sort_order: 1, is_published: true, clp: 12000,
+  },
+  {
+    slug: 'el-renacido',
+    title_es: 'El Renacido',
+    title_en: 'The Reborn',
+    subtitle_es: 'Un Viaje desde la Muerte hacia la Libertad del Alma',
+    subtitle_en: 'A Journey from Death to the Freedom of the Soul',
+    description_es: 'Documentación de la experiencia de resurrección personal del autor tras su crisis de salud. Analiza los mecanismos que aprisionan al ser humano y el proceso de recuperación de la libertad del alma.',
+    description_en: 'Documentation of the author\'s personal resurrection experience following his health crisis.',
+    year: 2023, sort_order: 2, is_published: true, clp: 12000,
+  },
+  {
+    slug: 'narcisismo-primera-ley-cristalizacion',
+    title_es: 'Narcisismo: La Primera Ley de la Cristalización',
+    title_en: 'Narcissism: The First Law of Crystallization',
+    subtitle_es: 'Una aproximación teológico-psicoanalítica',
+    subtitle_en: 'A Theological-Psychoanalytic Approach',
+    description_es: 'Exploración del narcisismo no solo como trastorno psicológico, sino como fuerza metafísica primordial. Integra análisis de textos sagrados e interpretaciones místicas.',
+    description_en: 'Exploration of narcissism as a primordial metaphysical force. Integrates sacred texts and mystical interpretations.',
+    isbn: '9798311562621', year: 2024, sort_order: 3, is_published: true, clp: 15000,
+  },
+  {
+    slug: 'el-espejo-quebrado',
+    title_es: 'El Espejo Quebrado',
+    title_en: 'The Broken Mirror',
+    subtitle_es: 'Narcisismo metafísico y la Homosexualidad como eco de la Caída Angelical',
+    subtitle_en: 'Metaphysical Narcissism and Homosexuality as Echo of the Angelic Fall',
+    description_es: 'Expansión de la investigación sobre el narcisismo metafísico. Utiliza análisis de textos hebreos y teorías psicoanalíticas para conectar la metafísica con la psicología profunda.',
+    description_en: 'An expansion of the research on metaphysical narcissism using Hebrew texts and psychoanalytic theory.',
+    year: 2024, sort_order: 4, is_published: true, clp: 15000,
+  },
+  {
+    slug: 'jesucristo-leon-de-juda',
+    title_es: 'Jesucristo, El León de Judá',
+    title_en: 'Jesus Christ, The Lion of Judah',
+    subtitle_es: 'El Tzimtzum Divino y la Revelación Trinitaria',
+    subtitle_en: 'The Divine Tzimtzum and the Trinitarian Revelation',
+    description_es: 'Desarrollo teológico y académico sobre la cristianización del Tzimtzum cabalístico. Propone que la contracción divina es el movimiento por el cual Dios infinito genera el espacio para la creación finita.',
+    description_en: 'Theological development on the Christianisation of the Kabbalistic Tzimtzum.',
+    year: 2024, sort_order: 5, is_published: true, clp: 19000,
+  },
+];
+
+function log(msg, cls='') {
+  const el = document.getElementById('log');
+  el.innerHTML += `<span class="${cls}">${msg}</span>\n`;
+}
+
+async function seed() {
+  const token = document.getElementById('token').value.trim() || localStorage.getItem('am_token');
+  if (!token) { alert('Pega tu token JWT primero'); return; }
+  
+  document.getElementById('log').innerHTML = '';
+  log('Iniciando carga de libros...\n');
+
+  for (const book of BOOKS) {
+    const { clp, ...bookData } = book;
+    try {
+      // Create book
+      const r = await fetch('/api/books', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify(bookData)
+      });
+      const d = await r.json();
+      if (!r.ok) throw new Error(d.error);
+      
+      const bookId = d.book.id;
+      log(`✓ Creado: ${book.title_es}`, 'ok');
+      
+      // Add CLP price
+      const pr = await fetch('/api/books/prices', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ book_id: bookId, currency: 'CLP', amount: clp, is_active: true })
+      });
+      const pd = await pr.json();
+      if (!pr.ok) throw new Error(pd.error);
+      log(`  💰 Precio CLP: $${clp.toLocaleString()}`, 'ok');
+      
+    } catch(e) {
+      log(`✗ Error en ${book.title_es}: ${e.message}`, 'err');
+    }
+  }
+  
+  log('\n✅ ¡Proceso completado! Ve al panel admin para verificar.');
+  log('→ <a href="/admin.html" style="color:rgba(180,155,90,0.8)">Panel Admin</a>');
+}
+</script>
+</body>
+</html>
