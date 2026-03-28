@@ -76,10 +76,20 @@ export default function AuthorSection() {
               {t('author.title')}
             </h2>
 
-            <div style={{ display:'flex', flexDirection:'column', gap:'1.1rem', color:'rgba(185,180,170,0.75)', lineHeight:1.85, fontSize:'0.95rem', fontFamily:'var(--font-sans)', fontWeight:300 }}>
-              <p>{t('author.bio_1')}</p>
-              <p>{t('author.bio_2')}</p>
-              <p>{t('author.bio_3')}</p>
+            <div style={{ display:'flex', flexDirection:'column', gap:'1.4rem' }}>
+              {(['author.bio_1','author.bio_2','author.bio_3'] as const).map((key, i) => (
+                <p key={i} style={{
+                  fontFamily: 'var(--font-sans)', fontWeight: 300,
+                  fontSize: 'clamp(0.875rem, 1.3vw, 0.95rem)',
+                  color: 'rgba(185,180,170,0.78)',
+                  lineHeight: 1.9,
+                  margin: 0,
+                  // Subtle first-letter treatment on first paragraph
+                  ...(i === 0 ? {} : {}),
+                }}>
+                  {t(key)}
+                </p>
+              ))}
             </div>
 
             {/* Quote — typographic pullquote */}
