@@ -5,6 +5,8 @@ import { Bloom, EffectComposer } from '@react-three/postprocessing';
 import { useTranslation } from 'react-i18next';
 import * as THREE from 'three';
 import type { Book } from '../../lib/books';
+import { useState } from 'react';
+import BuyModal from './BuyModal';
 import GeometricAccent from '../3d/FloatingCrystal';
 
 interface Props { book: Book; onClose: () => void; }
@@ -41,6 +43,7 @@ function ModalBook({ book }: { book: Book }) {
 }
 
 export default function BookModal({ book, onClose }: Props) {
+  const [showBuy, setShowBuy] = useState(false);
   const { t, i18n } = useTranslation();
   const overlayRef  = useRef<HTMLDivElement>(null);
   const isEn        = i18n.language.startsWith('en');
@@ -146,21 +149,44 @@ export default function BookModal({ book, onClose }: Props) {
             {/* Thin rule */}
             <div style={{ height:'1px', background:'linear-gradient(to right, rgba(180,155,90,0.2), transparent)' }} />
 
-            {/* Buy button */}
-            <a href={book.amazonUrl} target="_blank" rel="noopener noreferrer"
-              style={{
-                display:'inline-flex', alignItems:'center', gap:'8px', alignSelf:'flex-start',
-                padding:'0.8rem 1.6rem', marginTop:'auto',
-                background:'rgba(180,155,90,0.1)', border:'1px solid rgba(180,155,90,0.4)',
-                color:'rgba(195,168,80,0.9)', borderRadius:'2px', textDecoration:'none',
-                fontFamily:'var(--font-sans)', fontWeight:500, fontSize:'10px',
-                letterSpacing:'0.14em', textTransform:'uppercase', transition:'all 0.25s',
-              }}
-              onMouseEnter={e => { e.currentTarget.style.background='rgba(180,155,90,0.18)'; e.currentTarget.style.borderColor='rgba(180,155,90,0.65)'; }}
-              onMouseLeave={e => { e.currentTarget.style.background='rgba(180,155,90,0.1)'; e.currentTarget.style.borderColor='rgba(180,155,90,0.4)'; }}>
-              <span style={{ fontSize:'13px' }}>↗</span>
-              {t('books.modal_buy')}
-            </a>
+            {/* Buttons */}
+            <div style={{ display:'flex', gap:'0.75rem', flexWrap:'wrap', marginTop:'auto' }}>
+              {/* Primary: Buy with Mercado Pago */}
+              <button
+                onClick={() => setShowBuy(true)}
+                style={{
+                  display:'inline-flex', alignItems:'center', gap:'8px',
+                  padding:'0.8rem 1.6rem',
+                  background:'rgba(180,155,90,0.18)', border:'1px solid rgba(180,155,90,0.55)',
+                  color:'rgba(210,182,95,0.97)', borderRadius:'2px', cursor:'pointer',
+                  fontFamily:'var(--font-sans)', fontWeight:500, fontSize:'10px',
+                  letterSpacing:'0.14em', textTransform:'uppercase', transition:'all 0.25s',
+                }}
+                onMouseEnter={e => { e.currentTarget.style.background='rgba(180,155,90,0.28)'; }}
+                onMouseLeave={e => { e.currentTarget.style.background='rgba(180,155,90,0.18)'; }}>
+                <svg width="16" height="16" viewBox="0 0 48 48"><circle cx="24" cy="24" r="22" fill="#009ee3"/><text x="24" y="30" textAnchor="middle" fontSize="18" fill="white" fontWeight="bold">MP</text></svg>
+                {t('books.buy')}
+              </button>
+
+              {/* Secondary: Amazon */}
+              <a href={book.amazonUrl} target="_blank" rel="noopener noreferrer"
+                style={{
+                  display:'inline-flex', alignItems:'center', gap:'6px',
+                  padding:'0.8rem 1.2rem',
+                  background:'transparent', border:'1px solid rgba(255,255,255,0.12)',
+                  color:'rgba(160,155,145,0.65)', borderRadius:'2px', textDecoration:'none',
+                  fontFamily:'var(--font-sans)', fontWeight:400, fontSize:'10px',
+                  letterSpacing:'0.14em', textTransform:'uppercase', transition:'all 0.25s',
+                }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor='rgba(255,255,255,0.25)'; e.currentTarget.style.color='rgba(200,195,185,0.8)'; }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor='rgba(255,255,255,0.12)'; e.currentTarget.style.color='rgba(160,155,145,0.65)'; }}>
+                <span style={{ fontSize:'11px' }}>↗</span>
+                Amazon
+              </a>
+            </div>
+
+            {/* BuyModal */}
+            {showBuy && <BuyModal book={book} onClose={() => setShowBuy(false)} />}
           </div>
         </div>
       </div>
