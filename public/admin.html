@@ -339,7 +339,7 @@ async function loadVentas() {
 async function loadNewsletter() {
   var el = document.getElementById('tab-newsletter-content');
   el.innerHTML = '<p style="color:rgba(160,155,145,0.5);padding:1rem">Cargando…</p>';
-  var r = await fetch('/api/newsletter/list', {headers:{Authorization:'Bearer '+TOKEN}});
+  var r = await fetch('/api/newsletter', {headers:{Authorization:'Bearer '+TOKEN}});
   var d = await r.json();
   var subs = d.subscribers || [];
   el.innerHTML = '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem">'
@@ -357,7 +357,7 @@ async function loadNewsletter() {
 }
 
 function exportCsv() {
-  fetch('/api/newsletter/list', {headers:{Authorization:'Bearer '+TOKEN}})
+  fetch('/api/newsletter', {headers:{Authorization:'Bearer '+TOKEN}})
     .then(function(r){return r.json();})
     .then(function(d) {
       var rows = ['Email,Fecha'].concat((d.subscribers||[]).map(function(s){
