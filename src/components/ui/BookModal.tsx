@@ -1,6 +1,6 @@
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef, useCallback, useMemo } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls, Float } from '@react-three/drei';
+import { OrbitControls, Float, useTexture, Text } from '@react-three/drei';
 import { Bloom, EffectComposer } from '@react-three/postprocessing';
 import { useTranslation } from 'react-i18next';
 import * as THREE from 'three';
@@ -13,30 +13,89 @@ interface Props { book: Book; onClose: () => void; }
 
 function ModalBook({ book }: { book: Book }) {
   const W = 1.35, H = 1.85, D = 0.14;
+
+  // Load cover texture — fallback to color if no image
+  const texture = useTexture(book.coverImage || '/covers/placeholder.png');
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.flipY = false;
+
+  const coverColor = useMemo(() => new THREE.Color(book.coverColor), [book.coverColor]);
+  const glowColor  = useMemo(() => new THREE.Color(book.glowColor),  [book.glowColor]);
+  const spineColor = useMemo(() => new THREE.Color(book.spineColor), [book.spineColor]);
+
+  // 6 faces: +X(pages), -X(spine), +Y(top), -Y(bottom), +Z(front/cover), -Z(back)
+  const materials = useMemo(() => [
+    new THREE.MeshStandardMaterial({ color: '#e8e0d5', roughness: 0.9 }),              // +X pages
+    new THREE.MeshStandardMaterial({ color: spineColor, roughness: 0.6 }),             // -X spine
+    new THREE.MeshStandardMaterial({ color: spineColor, roughness: 0.8 }),             // +Y top
+    new THREE.MeshStandardMaterial({ color: spineColor, roughness: 0.8 }),             // -Y bottom
+    book.coverImage                                                                     // +Z front
+      ? new THREE.MeshStandardMaterial({ map: texture, roughness: 0.25, metalness: 0.1 })
+      : new THREE.MeshStandardMaterial({ color: coverColor, emissive: glowColor, emissiveIntensity: 0.2, roughness: 0.25, metalness: 0.6 }),
+    new THREE.MeshStandardMaterial({ color: coverColor, roughness: 0.5 }),             // -Z back
+  ], [texture, coverColor, glowColor, spineColor, book.coverImage]);
+
   return (
-    <Float speed={1.2} rotationIntensity={0.2} floatIntensity={0.35}>
+    <Float speed={1.2} rotationIntensity={0.18} floatIntensity={0.35}>
       <group>
-        <mesh castShadow>
+        {/* Book body with 6 materials */}
+        <mesh castShadow material={materials}>
           <boxGeometry args={[W, H, D]} />
-          <meshStandardMaterial
-            color={new THREE.Color(book.coverColor)}
-            emissive={new THREE.Color(book.glowColor)}
-            emissiveIntensity={0.2} roughness={0.25} metalness={0.6}
-          />
         </mesh>
-        <mesh position={[-W/2 - 0.01, 0, 0]}>
-          <boxGeometry args={[0.025, H, D]} />
+
+        {/* Subtle spine detail */}
+        <mesh position={[-W/2 - 0.008, 0, 0]}>
+          <boxGeometry args={[0.018, H, D]} />
           <meshStandardMaterial color={book.spineColor} roughness={0.6} />
         </mesh>
-        <mesh position={[W/2 + 0.01, 0, 0]}>
-          <boxGeometry args={[0.022, H, D]} />
-          <meshStandardMaterial color="#e8e0d5" roughness={0.9} />
+
+        {/* Pages edge */}
+        <mesh position={[W/2 + 0.008, 0, 0]}>
+          <boxGeometry args={[0.018, H, D]} />
+          <meshStandardMaterial color="#ede8de" roughness={0.9} />
         </mesh>
+
+        {/* Ambient glow halo */}
         <mesh>
-          <sphereGeometry args={[1.1, 16, 16]} />
-          <meshBasicMaterial color={book.glowColor} transparent opacity={0.04} blending={THREE.AdditiveBlending} side={THREE.BackSide} depthWrite={false} />
+          <sphereGeometry args={[1.15, 16, 16]} />
+          <meshBasicMaterial color={book.glowColor} transparent opacity={0.045}
+            blending={THREE.AdditiveBlending} side={THREE.BackSide} depthWrite={false} />
         </mesh>
-        <pointLight color={book.glowColor} intensity={2} distance={5} decay={2} />
+
+        {/* Key light */}
+        <pointLight color={book.glowColor} intensity={2.2} distance={5} decay={2} />
+
+        {/* Title + author on cover face when no image */}
+        {!book.coverImage && (<>
+          <Text
+            position={[0, 0.28, D / 2 + 0.012]}
+            fontSize={0.13}
+            maxWidth={1.2}
+            textAlign="center"
+            color="rgba(245,240,230,0.95)"
+            anchorX="center"
+            anchorY="middle"
+            lineHeight={1.3}
+          >
+            {book.titleEs}
+          </Text>
+          <Text
+            position={[0, -0.55, D / 2 + 0.012]}
+            fontSize={0.075}
+            maxWidth={1.1}
+            textAlign="center"
+            color={book.glowColor}
+            anchorX="center"
+            anchorY="middle"
+          >
+            Andrew Myer
+          </Text>
+          {/* Decorative line on cover */}
+          <mesh position={[0, -0.18, D / 2 + 0.009]}>
+            <planeGeometry args={[0.8, 0.004]} />
+            <meshBasicMaterial color={book.glowColor} transparent opacity={0.5} />
+          </mesh>
+        </>)}
       </group>
     </Float>
   );
