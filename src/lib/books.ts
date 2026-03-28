@@ -53,7 +53,7 @@ export const BOOKS: Book[] = [
     descriptionEn: 'Documentation of the author\'s personal resurrection experience following his health crisis. Analyses the mechanisms that imprison human beings and the process of recovering freedom of the soul.',
   },
   {
-    id: 'narcisismo-cristalizacion',
+    id: 'narcisismo-primera-ley-cristalizacion',
     titleEs: 'Narcisismo: La Primera Ley de la Cristalización',
     titleEn: 'Narcissism: The First Law of Crystallization',
     subtitle: 'Una aproximación teológico-psicoanalítica',
@@ -68,7 +68,7 @@ export const BOOKS: Book[] = [
     descriptionEn: 'Exploration of narcissism not merely as a psychological disorder but as a primordial metaphysical force. Integrates analysis of sacred texts, mystical interpretations and modern psychology.',
   },
   {
-    id: 'espejo-quebrado',
+    id: 'el-espejo-quebrado',
     titleEs: 'El Espejo Quebrado',
     titleEn: 'The Broken Mirror',
     subtitle: 'Narcisismo metafísico y la Homosexualidad como eco de la Caída Angelical',
@@ -83,7 +83,7 @@ export const BOOKS: Book[] = [
     descriptionEn: 'An expansion of the research on metaphysical narcissism, proposing that certain patterns of desire are contemporary manifestations of a primordial inversion.',
   },
   {
-    id: 'jesucristo-leon-juda',
+    id: 'jesucristo-leon-de-juda',
     titleEs: 'Jesucristo, El León de Judá',
     titleEn: 'Jesus Christ, The Lion of Judah',
     subtitle: 'El Tzimtzum Divino y la Revelación Trinitaria',
