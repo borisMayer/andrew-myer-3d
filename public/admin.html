@@ -87,8 +87,15 @@
 <script>
 let TOKEN = localStorage.getItem('am_token') || '';
 
-// Auto-login if token exists
-if (TOKEN) { showPanel(); loadBooks(); }
+// Auto-login if token exists — validate first
+if (TOKEN) {
+  fetch('/api/admin/sales', { headers: { Authorization: `Bearer ${TOKEN}` } })
+    .then(r => {
+      if (r.ok || r.status === 200) { showPanel(); loadBooks(); }
+      else { localStorage.removeItem('am_token'); TOKEN = ''; }
+    })
+    .catch(() => { localStorage.removeItem('am_token'); TOKEN = ''; });
+}
 
 async function login() {
   const btn = document.getElementById('login-btn');
