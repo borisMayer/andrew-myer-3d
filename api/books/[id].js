@@ -25,14 +25,27 @@ export default async function handler(req, res) {
   if (req.method === 'PUT') {
     const b = req.body;
     try {
+      // Fetch existing to merge (safe partial updates)
+      const existing = await sql`SELECT * FROM am_books WHERE id = ${id} LIMIT 1`;
+      if (!existing.length) return res.status(404).json({ error: 'Not found' });
+      const ex = existing[0];
+
       const rows = await sql`
-        UPDATE am_books SET slug=${b.slug}, title_es=${b.title_es}, title_en=${b.title_en||''},
-          subtitle_es=${b.subtitle_es||null}, subtitle_en=${b.subtitle_en||null},
-          description_es=${b.description_es||''}, description_en=${b.description_en||''},
-          cover_url=${b.cover_url||null}, pdf_url=${b.pdf_url||null},
-          isbn=${b.isbn||null}, year=${b.year||null},
-          is_published=${b.is_published||false}, sort_order=${b.sort_order||0}
-        WHERE id=${id} RETURNING *
+        UPDATE am_books SET
+          slug          = ${b.slug          !== undefined ? b.slug          : ex.slug},
+          title_es      = ${b.title_es      !== undefined ? b.title_es      : ex.title_es},
+          title_en      = ${b.title_en      !== undefined ? b.title_en      : ex.title_en},
+          subtitle_es   = ${b.subtitle_es   !== undefined ? b.subtitle_es   : ex.subtitle_es},
+          subtitle_en   = ${b.subtitle_en   !== undefined ? b.subtitle_en   : ex.subtitle_en},
+          description_es= ${b.description_es!== undefined ? b.description_es: ex.description_es},
+          description_en= ${b.description_en!== undefined ? b.description_en: ex.description_en},
+          cover_url     = ${b.cover_url     !== undefined ? b.cover_url     : ex.cover_url},
+          pdf_url       = ${b.pdf_url       !== undefined ? b.pdf_url       : ex.pdf_url},
+          isbn          = ${b.isbn          !== undefined ? b.isbn          : ex.isbn},
+          year          = ${b.year          !== undefined ? b.year          : ex.year},
+          is_published  = ${b.is_published  !== undefined ? b.is_published  : ex.is_published},
+          sort_order    = ${b.sort_order    !== undefined ? b.sort_order    : ex.sort_order}
+        WHERE id = ${id} RETURNING *
       `;
       return res.status(200).json({ book: rows[0] });
     } catch (e) { return res.status(500).json({ error: e.message }); }

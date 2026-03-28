@@ -2,121 +2,167 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Seed Books</title>
+<title>Seed Books — Andrew Myer</title>
 <style>
-  body { background:#09080d; color:rgba(220,215,205,0.9); font-family:monospace; padding:2rem; }
-  button { padding:0.7rem 1.5rem; background:rgba(180,155,90,0.15); border:1px solid rgba(180,155,90,0.45); border-radius:3px; color:rgba(205,178,90,0.95); font-size:13px; cursor:pointer; margin-bottom:1rem; display:block; }
-  .log { background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:3px; padding:1rem; margin-top:1rem; font-size:12px; line-height:1.8; white-space:pre-wrap; }
+  body { background:#09080d; color:rgba(220,215,205,0.9); font-family:monospace; padding:2rem; max-width:700px; margin:0 auto; }
+  h2 { font-family:Georgia,serif; font-weight:400; margin-bottom:1rem; color:rgba(235,228,215,0.95); }
+  button { padding:.6rem 1.25rem; background:rgba(180,155,90,0.15); border:1px solid rgba(180,155,90,0.45); border-radius:3px; color:rgba(205,178,90,0.95); font-size:12px; cursor:pointer; margin-right:.5rem; margin-bottom:.75rem; }
+  input { width:100%; padding:.6rem .8rem; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:3px; color:rgba(220,215,205,0.9); font-size:12px; margin-bottom:.75rem; }
+  .log { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:3px; padding:1rem; margin-top:1rem; font-size:11px; line-height:1.9; min-height:80px; white-space:pre-wrap; }
   .ok  { color:rgba(100,210,130,0.9); }
   .err { color:rgba(220,110,90,0.9); }
-  input { padding:0.5rem 0.75rem; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); border-radius:3px; color:rgba(220,215,205,0.9); font-size:13px; width:100%; margin-bottom:1rem; }
+  .info { color:rgba(180,155,90,0.8); }
 </style>
 </head>
 <body>
-<h2 style="margin-bottom:1rem;font-family:Georgia,serif;font-weight:400">Cargar libros iniciales</h2>
-<p style="margin-bottom:1rem;font-size:12px;color:rgba(160,155,145,0.6)">Pega tu token de admin (de localStorage en admin.html):</p>
-<input type="text" id="token" placeholder="Token JWT del admin..." />
-<button onclick="seed()">⚡ Crear los 5 libros con precios</button>
-<div class="log" id="log">Esperando...</div>
+<h2>Carga inicial de libros</h2>
+<p style="font-size:11px;color:rgba(160,155,145,0.6);margin-bottom:1rem">Obtén tu token: abre admin.html → F12 → Consola → escribe: <code>localStorage.getItem('am_token')</code></p>
+<input type="text" id="token" placeholder="Token JWT del admin...">
+<div>
+  <button onclick="seedAll()">⚡ Crear / actualizar los 5 libros</button>
+  <button onclick="checkStatus()">🔍 Ver estado actual</button>
+</div>
+<div class="log" id="log">Listo para ejecutar...</div>
 
 <script>
-const BOOKS = [
-  {
-    slug: 'entre-dos-mundos-vol1',
-    title_es: 'Entre Dos Mundos, Vol. I',
-    title_en: 'Between Two Worlds, Vol. I',
-    subtitle_es: 'El Poder del Kadish y el Rugido del León',
-    subtitle_en: 'The Power of the Kaddish and the Roar of the Lion',
-    description_es: 'Crónica de una odisea espiritual que comenzó en una Unidad de Cuidados Intensivos durante la pandemia de COVID-19. El autor relata su travesía a través de las dimensiones de las tinieblas y la gloria celestial mientras su cuerpo permanecía en coma.',
-    description_en: 'Chronicle of a spiritual odyssey that began in an Intensive Care Unit during the COVID-19 pandemic.',
-    year: 2023, sort_order: 1, is_published: true, clp: 12000,
-  },
-  {
-    slug: 'el-renacido',
-    title_es: 'El Renacido',
-    title_en: 'The Reborn',
-    subtitle_es: 'Un Viaje desde la Muerte hacia la Libertad del Alma',
-    subtitle_en: 'A Journey from Death to the Freedom of the Soul',
-    description_es: 'Documentación de la experiencia de resurrección personal del autor tras su crisis de salud. Analiza los mecanismos que aprisionan al ser humano y el proceso de recuperación de la libertad del alma.',
-    description_en: 'Documentation of the author\'s personal resurrection experience following his health crisis.',
-    year: 2023, sort_order: 2, is_published: true, clp: 12000,
-  },
-  {
-    slug: 'narcisismo-primera-ley-cristalizacion',
-    title_es: 'Narcisismo: La Primera Ley de la Cristalización',
-    title_en: 'Narcissism: The First Law of Crystallization',
-    subtitle_es: 'Una aproximación teológico-psicoanalítica',
-    subtitle_en: 'A Theological-Psychoanalytic Approach',
-    description_es: 'Exploración del narcisismo no solo como trastorno psicológico, sino como fuerza metafísica primordial. Integra análisis de textos sagrados e interpretaciones místicas.',
-    description_en: 'Exploration of narcissism as a primordial metaphysical force. Integrates sacred texts and mystical interpretations.',
-    isbn: '9798311562621', year: 2024, sort_order: 3, is_published: true, clp: 15000,
-  },
-  {
-    slug: 'el-espejo-quebrado',
-    title_es: 'El Espejo Quebrado',
-    title_en: 'The Broken Mirror',
-    subtitle_es: 'Narcisismo metafísico y la Homosexualidad como eco de la Caída Angelical',
-    subtitle_en: 'Metaphysical Narcissism and Homosexuality as Echo of the Angelic Fall',
-    description_es: 'Expansión de la investigación sobre el narcisismo metafísico. Utiliza análisis de textos hebreos y teorías psicoanalíticas para conectar la metafísica con la psicología profunda.',
-    description_en: 'An expansion of the research on metaphysical narcissism using Hebrew texts and psychoanalytic theory.',
-    year: 2024, sort_order: 4, is_published: true, clp: 15000,
-  },
-  {
-    slug: 'jesucristo-leon-de-juda',
-    title_es: 'Jesucristo, El León de Judá',
-    title_en: 'Jesus Christ, The Lion of Judah',
-    subtitle_es: 'El Tzimtzum Divino y la Revelación Trinitaria',
-    subtitle_en: 'The Divine Tzimtzum and the Trinitarian Revelation',
-    description_es: 'Desarrollo teológico y académico sobre la cristianización del Tzimtzum cabalístico. Propone que la contracción divina es el movimiento por el cual Dios infinito genera el espacio para la creación finita.',
-    description_en: 'Theological development on the Christianisation of the Kabbalistic Tzimtzum.',
-    year: 2024, sort_order: 5, is_published: true, clp: 19000,
-  },
+var BOOKS = [
+  { slug:'entre-dos-mundos-vol1', title_es:'Entre Dos Mundos, Vol. I', title_en:'Between Two Worlds, Vol. I',
+    subtitle_es:'El Poder del Kadish y el Rugido del León', subtitle_en:'The Power of the Kaddish and the Roar of the Lion',
+    description_es:'Crónica de una odisea espiritual que comenzó en una Unidad de Cuidados Intensivos durante la pandemia de COVID-19. El autor relata su travesía a través de las dimensiones de las tinieblas y la gloria celestial mientras su cuerpo permanecía en coma.',
+    description_en:'Chronicle of a spiritual odyssey that began in an Intensive Care Unit during the COVID-19 pandemic.',
+    year:2023, sort_order:1, is_published:true, clp:12000 },
+  { slug:'el-renacido', title_es:'El Renacido', title_en:'The Reborn',
+    subtitle_es:'Un Viaje desde la Muerte hacia la Libertad del Alma', subtitle_en:'A Journey from Death to the Freedom of the Soul',
+    description_es:'Documentación de la experiencia de resurrección personal del autor tras su crisis de salud. Analiza los mecanismos que aprisionan al ser humano y el proceso de recuperación de la libertad del alma.',
+    description_en:'Documentation of the author\'s personal resurrection experience following his health crisis.',
+    year:2023, sort_order:2, is_published:true, clp:12000 },
+  { slug:'narcisismo-primera-ley-cristalizacion', title_es:'Narcisismo: La Primera Ley de la Cristalización', title_en:'Narcissism: The First Law of Crystallization',
+    subtitle_es:'Una aproximación teológico-psicoanalítica', subtitle_en:'A Theological-Psychoanalytic Approach',
+    description_es:'Exploración del narcisismo no solo como trastorno psicológico, sino como fuerza metafísica primordial. Integra análisis de textos sagrados e interpretaciones místicas.',
+    description_en:'Exploration of narcissism as a primordial metaphysical force. Integrates sacred texts and mystical interpretations.',
+    isbn:'9798311562621', year:2024, sort_order:3, is_published:true, clp:15000 },
+  { slug:'el-espejo-quebrado', title_es:'El Espejo Quebrado', title_en:'The Broken Mirror',
+    subtitle_es:'Narcisismo metafísico y la Homosexualidad como eco de la Caída Angelical',
+    subtitle_en:'Metaphysical Narcissism and Homosexuality as Echo of the Angelic Fall',
+    description_es:'Expansión de la investigación sobre el narcisismo metafísico. Utiliza análisis de textos hebreos y teorías psicoanalíticas.',
+    description_en:'An expansion of the research on metaphysical narcissism using Hebrew texts and psychoanalytic theory.',
+    year:2024, sort_order:4, is_published:true, clp:15000 },
+  { slug:'jesucristo-leon-de-juda', title_es:'Jesucristo, El León de Judá', title_en:'Jesus Christ, The Lion of Judah',
+    subtitle_es:'El Tzimtzum Divino y la Revelación Trinitaria', subtitle_en:'The Divine Tzimtzum and the Trinitarian Revelation',
+    description_es:'Desarrollo teológico y académico sobre la cristianización del Tzimtzum cabalístico. Propone que la contracción divina es el movimiento por el cual Dios infinito genera el espacio para la creación finita.',
+    description_en:'Theological development on the Christianisation of the Kabbalistic Tzimtzum.',
+    year:2024, sort_order:5, is_published:true, clp:19000 },
 ];
 
-function log(msg, cls='') {
-  const el = document.getElementById('log');
-  el.innerHTML += `<span class="${cls}">${msg}</span>\n`;
+function log(msg, cls) {
+  var el = document.getElementById('log');
+  el.innerHTML += '<span class="'+(cls||'')+'">' + msg + '</span>\n';
+  el.scrollTop = el.scrollHeight;
+}
+function clearLog() { document.getElementById('log').innerHTML = ''; }
+
+function getToken() {
+  var t = document.getElementById('token').value.trim() || localStorage.getItem('am_token');
+  if (!t) { alert('Pega tu token JWT primero'); return null; }
+  return t;
 }
 
-async function seed() {
-  const token = document.getElementById('token').value.trim() || localStorage.getItem('am_token');
-  if (!token) { alert('Pega tu token JWT primero'); return; }
-  
-  document.getElementById('log').innerHTML = '';
-  log('Iniciando carga de libros...\n');
+async function checkStatus() {
+  clearLog();
+  var token = getToken(); if (!token) return;
+  log('Consultando estado actual...', 'info');
+  var r = await fetch('/api/books?published=false', {headers:{Authorization:'Bearer '+token}});
+  var d = await r.json();
+  var books = d.books || [];
+  log('Libros en base de datos: ' + books.length, 'info');
+  books.forEach(function(b) {
+    log('  ' + (b.is_published?'✓':'○') + ' [' + b.slug + '] ' + b.title_es + ' — ' + (b.prices&&b.prices.length?b.prices.map(function(p){return p.currency+' '+Number(p.amount).toLocaleString();}).join(', '):'SIN PRECIO'), b.is_published?'ok':'');
+  });
+  var missing = BOOKS.filter(function(b) { return !books.find(function(db){ return db.slug===b.slug; }); });
+  if (missing.length) {
+    log('\nLibros faltantes: ' + missing.length, 'err');
+    missing.forEach(function(b) { log('  ✗ ' + b.slug, 'err'); });
+  } else {
+    log('\n✅ Todos los libros están en la DB', 'ok');
+  }
+}
 
-  for (const book of BOOKS) {
-    const { clp, ...bookData } = book;
+async function seedAll() {
+  clearLog();
+  var token = getToken(); if (!token) return;
+
+  // Get existing books first
+  log('Consultando libros existentes...', 'info');
+  var r0 = await fetch('/api/books?published=false', {headers:{Authorization:'Bearer '+token}});
+  var d0 = await r0.json();
+  var existing = d0.books || [];
+  log('Libros existentes: ' + existing.length + '\n', 'info');
+
+  for (var i = 0; i < BOOKS.length; i++) {
+    var book = BOOKS[i];
+    var clp = book.clp;
+    var bookData = {
+      slug: book.slug, title_es: book.title_es, title_en: book.title_en,
+      subtitle_es: book.subtitle_es, subtitle_en: book.subtitle_en,
+      description_es: book.description_es, description_en: book.description_en,
+      isbn: book.isbn || null, year: book.year,
+      sort_order: book.sort_order, is_published: true
+    };
+
+    // Check if exists by slug
+    var existing_book = existing.find(function(b) { return b.slug === book.slug; });
+    var bookId, method, url;
+
+    if (existing_book) {
+      method = 'PUT'; url = '/api/books/' + existing_book.id;
+      log('↻ Actualizando: ' + book.title_es, 'info');
+    } else {
+      method = 'POST'; url = '/api/books';
+      log('+ Creando: ' + book.title_es, 'info');
+    }
+
     try {
-      // Create book
-      const r = await fetch('/api/books', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      var r = await fetch(url, {
+        method: method,
+        headers: {'Content-Type':'application/json', 'Authorization':'Bearer '+token},
         body: JSON.stringify(bookData)
       });
-      const d = await r.json();
-      if (!r.ok) throw new Error(d.error);
-      
-      const bookId = d.book.id;
-      log(`✓ Creado: ${book.title_es}`, 'ok');
-      
-      // Add CLP price
-      const pr = await fetch('/api/books/prices', {
+      var d = await r.json();
+      if (!r.ok) throw new Error(d.error || 'Error ' + r.status);
+      bookId = d.book.id;
+      log('  ✓ ' + book.title_es, 'ok');
+
+      // Add/update CLP price
+      var pr = await fetch('/api/books/prices', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-        body: JSON.stringify({ book_id: bookId, currency: 'CLP', amount: clp, is_active: true })
+        headers: {'Content-Type':'application/json', 'Authorization':'Bearer '+token},
+        body: JSON.stringify({book_id: bookId, currency:'CLP', amount: clp, is_active: true})
       });
-      const pd = await pr.json();
+      var pd = await pr.json();
       if (!pr.ok) throw new Error(pd.error);
-      log(`  💰 Precio CLP: $${clp.toLocaleString()}`, 'ok');
-      
+      log('  💰 CLP $' + clp.toLocaleString(), 'ok');
+
     } catch(e) {
-      log(`✗ Error en ${book.title_es}: ${e.message}`, 'err');
+      log('  ✗ Error: ' + e.message, 'err');
     }
   }
-  
-  log('\n✅ ¡Proceso completado! Ve al panel admin para verificar.');
-  log('→ <a href="/admin.html" style="color:rgba(180,155,90,0.8)">Panel Admin</a>');
+
+  // Delete books with bad slugs (the old manually-created one)
+  var bad = existing.filter(function(b) {
+    return !BOOKS.find(function(nb) { return nb.slug === b.slug; });
+  });
+  if (bad.length) {
+    log('\nEliminando ' + bad.length + ' libro(s) con slug incorrecto...', 'info');
+    for (var j = 0; j < bad.length; j++) {
+      var del = await fetch('/api/books/' + bad[j].id, {
+        method: 'DELETE', headers: {Authorization: 'Bearer '+token}
+      });
+      if (del.ok) log('  ✓ Eliminado: ' + bad[j].title_es + ' ['+bad[j].slug+']', 'ok');
+    }
+  }
+
+  log('\n✅ ¡Proceso completado! Verifica en el admin.', 'ok');
+  log('→ andrewmyer.com/admin.html', 'info');
 }
 </script>
 </body>
