@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Diagnóstico DB — Admin</title>
+<style>
+  body { background:#09080d; color:#ddd; font-family:monospace; padding:2rem; }
+  pre { background:rgba(255,255,255,0.04); padding:1rem; border-radius:3px; overflow-x:auto; font-size:12px; line-height:1.6; }
+  button { padding:.5rem 1rem; background:rgba(180,155,90,0.15); border:1px solid rgba(180,155,90,0.4); color:#c9a227; cursor:pointer; border-radius:3px; margin-right:.5rem; margin-bottom:.5rem; }
+  input { padding:.5rem; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1); color:#ddd; border-radius:3px; width:100%; margin-bottom:.75rem; }
+  h2 { color:rgba(235,228,215,0.9); font-weight:400; margin-bottom:1rem; }
+</style>
+</head>
+<body>
+<h2>🔍 Diagnóstico — Ventas y Webhook</h2>
+<input type="text" id="token" placeholder="Token JWT (del admin)">
+<div>
+  <button onclick="loadSales()">📋 Ver todas las ventas</button>
+  <button onclick="testWebhook()">🔧 Test webhook manual</button>
+  <button onclick="fixPending()">⚡ Forzar check de ventas PENDING</button>
+</div>
+<pre id="out">Ingresa tu token y haz click en una acción...</pre>
+
+<script>
+function getToken() { return document.getElementById('token').value.trim() || localStorage.getItem('am_token') || ''; }
+function log(data) { document.getElementById('out').textContent = typeof data === 'string' ? data : JSON.stringify(data, null, 2); }
+
+async function loadSales() {
+  log('Cargando ventas...');
+  const r = await fetch('/api/admin/sales', {headers:{Authorization:'Bearer '+getToken()}});
+  const d = await r.json();
+  if (!r.ok) { log('ERROR ' + r.status + ': ' + JSON.stringify(d)); return; }
+  const sales = d.sales || [];
+  log('TOTAL VENTAS: ' + sales.length + '\n\n' + 
+    (sales.length === 0 ? '⚠️ Sin ventas en la DB' :
+    sales.map(s => 
+      `ID: ${s.id}\n` +
+      `Libro: ${s.title_es}\n` +
+      `Email: ${s.buyer_email}\n` +
+      `Monto: ${s.currency} ${s.amount}\n` +
+      `Estado: ${s.status}\n` +
+      `MP Payment ID: ${s.mp_payment_id || 'ninguno'}\n` +
+      `MP Pref ID: ${s.mp_preference_id || 'ninguno'}\n` +
+      `Token descarga: ${s.download_token ? '✅ tiene token' : '❌ sin token'}\n` +
+      `Creada: ${new Date(s.created_at).toLocaleString('es-CL')}\n` +
+      '─'.repeat(50)
+    ).join('\n'))
+  );
+}
+
+async function testWebhook() {
+  log('Probando webhook...');
+  const r = await fetch('/api/payment/webhook');
+  const d = await r.json();
+  log('GET /api/payment/webhook → ' + JSON.stringify(d));
+}
+
+async function fixPending() {
+  const token = getToken();
+  log('Cargando ventas PENDING...');
+  const r = await fetch('/api/admin/sales', {headers:{Authorization:'Bearer '+token}});
+  const d = await r.json();
+  const pending = (d.sales || []).filter(s => s.status === 'PENDING' && s.mp_preference_id);
+  
+  if (pending.length === 0) {
+    log('No hay ventas PENDING con preference_id para procesar.\n\nVentas totales: ' + (d.sales||[]).length);
+    return;
+  }
+  
+  log(`Encontradas ${pending.length} venta(s) PENDING con preference_id.\nCada una requiere que MP envíe el webhook con el payment_id.\n\nVentas PENDING:\n` +
+    pending.map(s => `- ${s.id} | ${s.buyer_email} | pref: ${s.mp_preference_id}`).join('\n')
+  );
+}
+</script>
+</body>
+</html>

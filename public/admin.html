@@ -314,25 +314,47 @@ async function saveLibro(bid) {
 async function loadVentas() {
   var el = document.getElementById('tab-ventas-content');
   el.innerHTML = '<p style="color:rgba(160,155,145,0.5);padding:1rem">Cargando…</p>';
-  var r = await fetch('/api/admin/sales', {headers:{Authorization:'Bearer '+TOKEN}});
-  var d = await r.json();
-  var sales = d.sales || [];
-  el.innerHTML = '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem">'
-    + '<h2 style="font-family:Georgia,serif;font-size:1.3rem;font-weight:400;color:rgba(235,228,215,0.95)">Ventas</h2>'
-    + '<button onclick="loadVentas()">↻ Actualizar</button></div>'
-    + (sales.length===0 ? '<p style="color:rgba(160,155,145,0.5);font-size:.875rem">Sin ventas aún.</p>'
-    : '<div class="section">' + sales.map(function(s,i) {
-        var st = s.status;
-        var cls = st==='APPROVED'?'pub':st==='REJECTED'?'btn-red':'dra';
-        return '<div style="padding:.85rem 1.25rem;border-bottom:'+(i<sales.length-1?'1px solid rgba(255,255,255,0.04)':'none')+';display:flex;align-items:center;gap:1rem;flex-wrap:wrap">'
-          + '<div style="flex:1;min-width:180px"><p style="font-size:.875rem;color:rgba(215,208,195,0.88);margin-bottom:2px">'+s.title_es+'</p>'
-          + '<p style="font-family:monospace;font-size:11px;color:rgba(140,135,125,0.55)">'+s.buyer_email+'</p></div>'
-          + '<div style="display:flex;align-items:center;gap:.75rem">'
-          + '<span style="font-family:monospace;font-size:12px;color:rgba(210,185,100,0.9)">'+s.currency+' '+Number(s.amount).toLocaleString()+'</span>'
-          + '<span class="badge '+cls+'">'+st+'</span>'
-          + '<span style="font-family:monospace;font-size:10px;color:rgba(130,125,115,0.45)">'+new Date(s.created_at).toLocaleDateString('es-CL')+'</span>'
-          + '</div></div>';
-      }).join('') + '</div>');
+  try {
+    var r = await fetch('/api/admin/sales', {
+      headers:{Authorization:'Bearer '+TOKEN, 'Cache-Control':'no-cache'}
+    });
+    var d = await r.json();
+    if (!r.ok) { el.innerHTML = '<p style="color:rgba(220,110,90,0.85);padding:1rem">Error ' + r.status + ': ' + (d.error||'desconocido') + '</p>'; return; }
+    var sales = d.sales || [];
+    var approved = sales.filter(function(s){return s.status==='APPROVED';}).length;
+    var pending  = sales.filter(function(s){return s.status==='PENDING';}).length;
+    var total    = sales.reduce(function(acc,s){ return s.status==='APPROVED'?acc+Number(s.amount):acc; },0);
+    
+    el.innerHTML = '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">'
+      + '<h2 style="font-family:Georgia,serif;font-size:1.3rem;font-weight:400;color:rgba(235,228,215,0.95)">Ventas <span style="font-size:.85rem;font-family:monospace;color:rgba(180,155,90,0.6)">' + sales.length + ' total</span></h2>'
+      + '<button onclick="loadVentas()">↻ Actualizar</button></div>'
+      + (sales.length>0 ? '<div style="display:flex;gap:1rem;margin-bottom:1.5rem;flex-wrap:wrap">'
+        + '<div style="padding:.6rem 1rem;background:rgba(60,160,80,0.1);border:1px solid rgba(60,160,80,0.2);border-radius:3px;font-family:monospace;font-size:11px"><span style="color:rgba(100,210,130,0.8)">● APROBADAS: '+approved+'</span></div>'
+        + '<div style="padding:.6rem 1rem;background:rgba(180,155,90,0.08);border:1px solid rgba(180,155,90,0.2);border-radius:3px;font-family:monospace;font-size:11px"><span style="color:rgba(180,155,90,0.7)">○ PENDIENTES: '+pending+'</span></div>'
+        + '</div>' : '')
+      + (sales.length===0 ? '<p style="color:rgba(160,155,145,0.5);font-size:.875rem">Sin ventas aún.</p>'
+      : '<div class="section">' + sales.map(function(s,i) {
+          var st = s.status;
+          var cls = st==='APPROVED'?'pub':st==='REJECTED'?'btn-red':'dra';
+          return '<div style="padding:.85rem 1.25rem;border-bottom:'+(i<sales.length-1?'1px solid rgba(255,255,255,0.04)':'none')+'">'
+            + '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;flex-wrap:wrap">'
+            + '<div style="flex:1;min-width:180px">'
+            + '<p style="font-size:.875rem;color:rgba(215,208,195,0.88);margin-bottom:3px;font-weight:500">'+s.title_es+'</p>'
+            + '<p style="font-family:monospace;font-size:11px;color:rgba(160,155,145,0.65);margin-bottom:3px">'+s.buyer_email+'</p>'
+            + '<p style="font-family:monospace;font-size:9px;color:rgba(120,115,105,0.4)">'+new Date(s.created_at).toLocaleString('es-CL')+'</p>'
+            + '</div>'
+            + '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">'
+            + '<div style="display:flex;align-items:center;gap:.6rem">'
+            + '<span style="font-family:monospace;font-size:13px;color:rgba(210,185,100,0.9)">'+s.currency+' '+Number(s.amount).toLocaleString()+'</span>'
+            + '<span class="badge '+cls+'">'+st+'</span>'
+            + '</div>'
+            + (s.mp_payment_id ? '<span style="font-family:monospace;font-size:9px;color:rgba(100,210,130,0.5)">MP ID: '+s.mp_payment_id+'</span>' : '<span style="font-family:monospace;font-size:9px;color:rgba(180,155,90,0.4)">Esperando confirmación MP</span>')
+            + (s.download_token ? '<span style="font-family:monospace;font-size:9px;color:rgba(100,210,130,0.5)">✓ Token descarga activo</span>' : '')
+            + '</div></div></div>';
+        }).join('') + '</div>');
+  } catch(e) {
+    el.innerHTML = '<p style="color:rgba(220,110,90,0.85);padding:1rem">Error de red: ' + e.message + '</p>';
+  }
 }
 
 // ── NEWSLETTER ────────────────────────────────────────────────────────────
