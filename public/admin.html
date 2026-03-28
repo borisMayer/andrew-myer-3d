@@ -181,32 +181,29 @@ function renderBooks(books) {
 }
 
 function bookRow(b) {
-  const prices = (b.prices||[]).map(p => `<span class="price-tag">${p.currency} ${Number(p.amount).toLocaleString()}</span>`).join(' ');
-  return `
-    <div class="book-row" id="row-${b.id}">
-      <div style="flex:1;min-width:0">
-        <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.25rem;flex-wrap:wrap">
-          <span class="badge ${b.is_published?'pub':'dra'}">${b.is_published?'● Publicado':'○ Borrador'}</span>
-          <span class="book-slug">${b.slug}</span>
-        </div>
-        <p class="book-title">${b.title_es}</p>
-        ${b.title_en ? `<p style="font-family:monospace;font-size:11px;color:rgba(140,135,125,0.45)">${b.title_en}</p>` : ''}
-        <div style="display:flex;flex-wrap:wrap;gap:0.35rem;margin-top:0.5rem">${prices}</div>
-        <div style="margin-top:0.4rem;display:flex;gap:0.85rem">
-          <span style="font-family:monospace;font-size:10px;color:${b.pdf_url?'rgba(100,210,130,0.7)':'rgba(200,100,80,0.6)'}">${b.pdf_url?'✓ PDF':'✗ Sin PDF'}</span>
-        </div>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:0.4rem;flex-shrink:0">
-        <button class="btn-sm" onclick="editBook('${b.id}')">Editar</button>
-        <button class="btn-sm" onclick="togglePublish('${b.id}', ${!b.is_published})">${b.is_published?'Ocultar':'Publicar'}</button>
-        <button class="btn-sm" style="background:rgba(200,70,55,0.1);border-color:rgba(200,70,55,0.3);color:rgba(220,110,90,0.85)" onclick="deleteBook('${b.id}','${b.title_es.replace(/'/g,"\\'")}')">Eliminar</button>
-      </div>
-    </div>
-    <div id="prices-${b.id}" style="padding:0.75rem 1.25rem;background:rgba(255,255,255,0.01);border-top:1px solid rgba(255,255,255,0.04)">
-      ${pricesForm(b)}
-    </div>
-    <div id="edit-${b.id}"></div>
-  `;
+  const prices = (b.prices||[]).map(p => '<span class="price-tag">'+p.currency+' '+Number(p.amount).toLocaleString()+'</span>').join(' ');
+  const pub = b.is_published;
+  return '<div class="book-row" id="row-'+b.id+'">'
+    + '<div style="flex:1;min-width:0">'
+    + '<div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.25rem;flex-wrap:wrap">'
+    + '<span class="badge '+(pub?'pub':'dra')+'">'+(pub?'● Publicado':'○ Borrador')+'</span>'
+    + '<span class="book-slug">'+b.slug+'</span>'
+    + '</div>'
+    + '<p class="book-title">'+b.title_es+'</p>'
+    + (b.title_en ? '<p style="font-family:monospace;font-size:11px;color:rgba(140,135,125,0.45)">'+b.title_en+'</p>' : '')
+    + '<div style="display:flex;flex-wrap:wrap;gap:0.35rem;margin-top:0.5rem">'+prices+'</div>'
+    + '<div style="margin-top:0.4rem;display:flex;gap:0.85rem">'
+    + '<span style="font-family:monospace;font-size:10px;color:'+(b.pdf_url?'rgba(100,210,130,0.7)':'rgba(200,100,80,0.6)')+'">'+( b.pdf_url?'✓ PDF':'✗ Sin PDF')+'</span>'
+    + '</div></div>'
+    + '<div style="display:flex;flex-direction:column;gap:0.4rem;flex-shrink:0">'
+    + '<button class="btn-sm" data-id="'+b.id+'" onclick="editBook(this.dataset.id)">Editar</button>'
+    + '<button class="btn-sm" data-id="'+b.id+'" data-pub="'+(pub?'false':'true')+'" onclick="togglePublish(this.dataset.id, this.dataset.pub==='true')">'+(pub?'Ocultar':'Publicar')+'</button>'
+    + '<button class="btn-sm" style="background:rgba(200,70,55,0.1);border-color:rgba(200,70,55,0.3);color:rgba(220,110,90,0.85)" data-id="'+b.id+'" data-title="'+b.title_es.replace(/"/g,'&quot;')+'" onclick="deleteBook(this.dataset.id,this.dataset.title)">Eliminar</button>'
+    + '</div></div>'
+    + '<div id="prices-'+b.id+'" style="padding:0.75rem 1.25rem;background:rgba(255,255,255,0.01);border-top:1px solid rgba(255,255,255,0.04)">'
+    + pricesForm(b)
+    + '</div>'
+    + '<div id="edit-'+b.id+'"></div>';
 }
 
 function pricesForm(b) {
