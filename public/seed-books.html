@@ -110,7 +110,10 @@ async function seedAll() {
     };
 
     // Check if exists by slug
-    var existing_book = existing.find(function(b) { return b.slug === book.slug; });
+    var existing_book = existing.find(function(b) { 
+      return b.slug === book.slug || 
+             b.title_es.toLowerCase().includes(book.title_es.toLowerCase().slice(0,10));
+    });
     var bookId, method, url;
 
     if (existing_book) {

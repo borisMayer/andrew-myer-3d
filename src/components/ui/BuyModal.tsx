@@ -78,7 +78,12 @@ export default function BuyModal({ book, onClose }: BuyModalProps) {
       .then(r => r.json())
       .then(data => {
         const books: DBBook[] = data.books ?? [];
-        const found = books.find(b => b.slug === book.id);
+        const found = books.find(b =>
+          b.slug === book.id ||
+          b.slug.toLowerCase().replace(/[^a-z0-9]/g,'-').replace(/-+/g,'-') === book.id ||
+          b.title_es.toLowerCase().includes(book.titleEs.toLowerCase().slice(0, 12)) ||
+          b.title_en.toLowerCase().includes(book.titleEn.toLowerCase().slice(0, 12))
+        );
         if (found && found.prices.length > 0) {
           setDbBook(found);
           setStatus('ok');
