@@ -5,15 +5,11 @@
   "framework": "vite",
   "rewrites": [
     {
-      "source": "/admin(.*)",
-      "destination": "/index.html"
+      "source": "/api/books/:id",
+      "destination": "/api/books/[id]"
     },
     {
-      "source": "/setup-admin",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/(.*)",
+      "source": "/((?!api/).*)",
       "destination": "/index.html"
     }
   ],
