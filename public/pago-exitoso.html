@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pago aprobado — Andrew Myer</title>
+<style>
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { min-height:100vh; background:#09080d; display:flex; align-items:center; justify-content:center; font-family:'Inter',sans-serif; padding:1rem; }
+  .card { width:min(520px,95vw); background:rgba(14,13,18,0.98); border:1px solid rgba(255,255,255,0.07); border-top:2px solid rgba(60,160,80,0.6); border-radius:4px; padding:2.5rem 2rem; text-align:center; }
+  .icon { width:64px; height:64px; background:rgba(60,160,80,0.15); border:1px solid rgba(60,160,80,0.3); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 1.5rem; font-size:28px; }
+  h1 { font-family:Georgia,serif; font-size:1.6rem; font-weight:400; color:rgba(235,228,215,0.95); margin-bottom:0.75rem; }
+  p { color:rgba(175,168,155,0.75); font-size:0.9rem; line-height:1.7; margin-bottom:1rem; }
+  .btn-primary { display:inline-flex; align-items:center; gap:8px; padding:0.9rem 2rem; background:rgba(180,155,90,0.2); border:1px solid rgba(180,155,90,0.5); border-radius:3px; color:#c9a227; text-decoration:none; font-size:0.9rem; font-weight:500; transition:all 0.2s; cursor:pointer; margin-bottom:0.75rem; width:100%; justify-content:center; }
+  .btn-primary:hover { background:rgba(180,155,90,0.32); }
+  .btn-secondary { display:inline-block; color:rgba(140,135,125,0.6); font-size:0.8rem; text-decoration:none; font-family:monospace; }
+  .btn-secondary:hover { color:rgba(180,155,90,0.7); }
+  .loading { color:rgba(160,155,145,0.5); font-size:0.85rem; font-family:monospace; }
+  .error { color:rgba(220,110,90,0.85); font-size:0.85rem; margin-top:0.75rem; padding:0.6rem 1rem; background:rgba(200,70,55,0.08); border:1px solid rgba(200,70,55,0.2); border-radius:3px; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="icon">✓</div>
+  <h1>¡Pago aprobado!</h1>
+  <p id="subtitle">Gracias por tu compra. Tu libro está listo.</p>
+
+  <div id="download-section">
+    <p class="loading" id="status">Preparando tu descarga...</p>
+  </div>
+
+  <br>
+  <a href="/" class="btn-secondary">← Volver al sitio</a>
+</div>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+const saleId = params.get('sale');
+const email  = params.get('email');
+
+async function checkSale() {
+  if (!saleId) {
+    document.getElementById('status').textContent = 'Tu compra fue registrada. Recibirás el PDF por email.';
+    return;
+  }
+
+  // Poll for download token (MP webhook may take a few seconds)
+  let attempts = 0;
+  const maxAttempts = 15;
+
+  const poll = async () => {
+    attempts++;
+    try {
+      const r = await fetch('/api/payment/status?sale=' + saleId);
+      const d = await r.json();
+
+      if (d.status === 'APPROVED' && d.download_token) {
+        showDownload(d.download_token, d.title_es);
+      } else if (d.status === 'REJECTED') {
+        document.getElementById('status').innerHTML = '<span style="color:rgba(220,110,90,0.85)">El pago fue rechazado. No se realizó ningún cobro.</span>';
+      } else if (attempts < maxAttempts) {
+        document.getElementById('status').textContent = 'Confirmando pago' + '.'.repeat(attempts % 4);
+        setTimeout(poll, 2000);
+      } else {
+        document.getElementById('status').innerHTML =
+          'Tu pago fue procesado. ' + (email ? `Recibirás el enlace de descarga en <strong style="color:rgba(180,155,90,0.8)">${email}</strong>` : 'Recibirás el enlace de descarga por email.') + '.';
+      }
+    } catch(e) {
+      if (attempts < maxAttempts) setTimeout(poll, 2000);
+      else document.getElementById('status').textContent = 'Recibirás el enlace de descarga por email.';
+    }
+  };
+
+  poll();
+}
+
+function showDownload(token, title) {
+  const section = document.getElementById('download-section');
+  section.innerHTML =
+    '<p style="color:rgba(100,210,130,0.85);margin-bottom:1.25rem;font-size:0.9rem">✓ ' + (title || 'Tu libro') + ' está listo</p>' +
+    '<a class="btn-primary" href="/api/payment/download?token=' + token + '" download>📄 Descargar PDF ahora</a>' +
+    '<p style="font-size:0.78rem;color:rgba(140,135,125,0.5);margin-top:0.5rem">El enlace es válido por 30 días. También recibirás un email con el link.</p>';
+}
+
+checkSale();
+</script>
+</body>
+</html>
