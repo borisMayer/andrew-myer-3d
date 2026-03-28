@@ -392,9 +392,7 @@ function exportSubs() {
   fetch('/api/newsletter/list', { headers: { Authorization: `Bearer ${TOKEN}` } })
     .then(r=>r.json())
     .then(d => {
-      const csv = 'Email,Fecha
-' + (d.subscribers||[]).map(s=>`${s.email},${new Date(s.created_at).toLocaleDateString('es-CL')}`).join('
-');
+      const csv = 'Email,Fecha\n' + (d.subscribers||[]).map(s=>s.email+','+new Date(s.created_at).toLocaleDateString('es-CL')).join('\n');
       const blob = new Blob([csv], { type: 'text/csv' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a'); a.href=url; a.download='suscriptores.csv'; a.click();
