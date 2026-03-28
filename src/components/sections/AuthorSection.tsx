@@ -39,14 +39,17 @@ export default function AuthorSection() {
               background: 'rgba(16,16,22,0.9)',
               border: '1px solid rgba(255,255,255,0.06)',
             }}>
-              {/* Placeholder — replace with real photo */}
-              <div style={{ width:'100%', height:'100%', display:'flex', alignItems:'center', justifyContent:'center', background: 'linear-gradient(160deg, #111120, #0a0a14)' }}>
-                <div style={{ textAlign: 'center', opacity: 0.25 }}>
-                  <div style={{ width:'64px', height:'64px', borderRadius:'50%', background:'rgba(180,155,90,0.2)', border:'1px solid rgba(180,155,90,0.3)', margin:'0 auto 12px' }} />
-                  <div style={{ width:'80px', height:'2px', background:'rgba(180,155,90,0.15)', margin:'0 auto 6px' }} />
-                  <div style={{ width:'60px', height:'2px', background:'rgba(180,155,90,0.1)', margin:'0 auto' }} />
-                </div>
-              </div>
+              {/* Author photo */}
+              <img
+                src="/author-photo.jpg"
+                alt="Andrew Myer"
+                loading="lazy"
+                style={{
+                  width: '100%', height: '100%',
+                  objectFit: 'cover', objectPosition: 'center top',
+                  display: 'block',
+                }}
+              />
               {/* Thin gold border accent bottom */}
               <div style={{ position:'absolute', bottom:0, left:0, right:0, height:'2px', background:'linear-gradient(to right, transparent, rgba(180,155,90,0.4), transparent)' }} />
             </div>
