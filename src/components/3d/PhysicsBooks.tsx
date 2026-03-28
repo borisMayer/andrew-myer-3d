@@ -22,7 +22,6 @@ function PhysicsBook({ book, position, index, onSelect }: {
   // Load real cover texture if available
   const texture = useTexture(book.coverImage || '/covers/placeholder.png');
   texture.colorSpace = THREE.SRGBColorSpace;
-  texture.flipY = false;
 
   // Build materials: front=cover, back=plain, sides=spine/pages
   const W = 1.1, H = 1.5, D = 0.11;

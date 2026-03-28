@@ -17,7 +17,6 @@ function ModalBook({ book }: { book: Book }) {
   // Load cover texture — fallback to color if no image
   const texture = useTexture(book.coverImage || '/covers/placeholder.png');
   texture.colorSpace = THREE.SRGBColorSpace;
-  texture.flipY = false;
 
   const coverColor = useMemo(() => new THREE.Color(book.coverColor), [book.coverColor]);
   const glowColor  = useMemo(() => new THREE.Color(book.glowColor),  [book.glowColor]);
