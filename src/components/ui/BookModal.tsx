@@ -181,7 +181,7 @@ export default function BookModal({ book, onClose }: Props) {
                 onMouseEnter={e => { e.currentTarget.style.borderColor='rgba(255,255,255,0.25)'; e.currentTarget.style.color='rgba(200,195,185,0.8)'; }}
                 onMouseLeave={e => { e.currentTarget.style.borderColor='rgba(255,255,255,0.12)'; e.currentTarget.style.color='rgba(160,155,145,0.65)'; }}>
                 <span style={{ fontSize:'11px' }}>↗</span>
-                Amazon
+                {t('books.amazon')}
               </a>
             </div>
 
