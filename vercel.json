@@ -6,7 +6,7 @@
   "rewrites": [
     {
       "source": "/api/admin/editorial",
-      "destination": "/api/admin/sales"
+      "destination": "/api/admin/sales?mode=editorial"
     },
     {
       "source": "/api/books/:id",
