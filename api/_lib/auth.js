@@ -1,17 +1,23 @@
 import { SignJWT, jwtVerify } from 'jose';
 
-const SECRET = new TextEncoder().encode(process.env.ADMIN_SECRET || 'fallback-secret-change-me');
+function getSecret() {
+  const secret = process.env.ADMIN_SECRET;
+  if (!secret || secret.length < 32 || secret === 'fallback-secret-change-me') {
+    throw new Error('ADMIN_SECRET must be configured with at least 32 characters');
+  }
+  return new TextEncoder().encode(secret);
+}
 
 export async function signToken(payload) {
   return new SignJWT(payload)
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
     .setExpirationTime('8h')
-    .sign(SECRET);
+    .sign(getSecret());
 }
 
 export async function verifyToken(token) {
-  const { payload } = await jwtVerify(token, SECRET);
+  const { payload } = await jwtVerify(token, getSecret());
   return payload;
 }
 
