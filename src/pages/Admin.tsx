@@ -231,7 +231,7 @@ export default function Admin() {
           </div>
         )}
 
-        {tab==='ai'&&<AndrewAI />}
+        {tab==='ai'&&<AndrewAI token={token} />}
         {tab==='books'&&(
           <>
             <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:'1.5rem'}}>
