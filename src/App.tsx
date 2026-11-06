@@ -90,6 +90,18 @@ export default function App() {
     return () => { clearTimeout(timer); window.removeEventListener('mousemove', onMouse); window.removeEventListener('scroll', onScroll); };
   }, []);
 
+  // Admin routes must be reachable on every screen size and without WebGL.
+  if (typeof window !== 'undefined') {
+    const path = window.location.pathname;
+    const hash = window.location.hash;
+    if (path === '/setup-admin' || hash === '#/setup-admin') {
+      return <Suspense fallback={<LoadingScreen />}><AdminSetup /></Suspense>;
+    }
+    if (path.startsWith('/admin') || hash.startsWith('#/admin')) {
+      return <Suspense fallback={<LoadingScreen />}><Admin /></Suspense>;
+    }
+  }
+
   if (isMobile || !webgl) {
     const MobileFallback = lazy(() => import('./components/ui/MobileWarning'));
     return <Suspense fallback={<LoadingScreen />}><MobileFallback /></Suspense>;
