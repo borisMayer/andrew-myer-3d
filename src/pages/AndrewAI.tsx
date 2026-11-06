@@ -6,7 +6,7 @@ type Channel = 'Instagram' | 'Facebook' | 'TikTok' | 'YouTube' | 'Blog';
 const channels: Channel[] = ['Instagram', 'Facebook', 'TikTok', 'YouTube', 'Blog'];
 const card = { background: 'rgba(18,16,25,.95)', border: '1px solid rgba(180,155,90,.22)', borderRadius: 8, padding: 20, marginBottom: 16 };
 const field = { background: '#181720', color: '#f0e9da', border: '1px solid #645c4b', borderRadius: 5, padding: 10, width: '100%', boxSizing: 'border-box' as const };
-export default function AndrewAI() {
+export default function AndrewAI({token}:{token:string}) {
   const [id, setId] = useState(BOOKS[0]?.id ?? '');
   const [lang, setLang] = useState<'es'|'en'>('es');
   const [channel, setChannel] = useState<Channel>('Instagram');
@@ -45,7 +45,7 @@ export default function AndrewAI() {
         <button type="button" onClick={async()=>{try{await navigator.clipboard.writeText(draft);setCopied(true);}catch{setCopied(false);}}} style={{ ...field, width: 'auto', marginTop: 12, cursor: 'pointer' }}>{copied?'Copiado':'Copiar texto'}</button>
       </div>}
     </div>
-    <AgentWorkspace />
+    <AgentWorkspace token={token} />
     <p style={{ color: '#aba49a', fontSize: 12 }}>Próximas fases: enlaces ASIN por libro, calendario persistente, importación KDP y aprobación editorial. No se atribuyen ventas a clics sin evidencia.</p>
   </section>;
 }
