@@ -42,3 +42,31 @@ export function qualityWarnings(task:Task):string[] {
  if(task.content.length>2200&&task.channel==='Instagram')warnings.push('Review Instagram caption length');
  return warnings;
 }
+
+export function exportTasksCsv(tasks:Task[]):string {
+ const columns:(keyof Task)[]=['scheduledDate','channel','bookId','language','agent','status','title','content','createdAt','updatedAt','id'];
+ const quote=(v:string)=>'"'+v.replace(/"/g,'""')+'"';
+ return '\uFEFF'+[columns.join(','),...tasks.map(t=>columns.map(k=>quote(String(t[k]))).join(','))].join('\r\n');
+}
+export function exportTasksJson(tasks:Task[]):string {
+ return JSON.stringify({format:'andrew-myer-editorial',version:1,exportedAt:new Date().toISOString(),tasks},null,2);
+}
+export function importTasksJson(raw:string):Task[] {
+ const payload:unknown=JSON.parse(raw);
+ if(!payload||typeof payload!=='object'||(payload as {format?:string}).format!=='andrew-myer-editorial'||(payload as {version?:number}).version!==1)throw new Error('Unsupported backup format');
+ const items=(payload as {tasks?:unknown}).tasks;
+ if(!Array.isArray(items)||items.length>1000||!items.every(isTask))throw new Error('Invalid task list');
+ const allowed=new Set(['draft','review','approved','done']);
+ return items.map(t=>({...t,status:allowed.has(t.status)?t.status:'draft',content:t.content.slice(0,15000)}));
+}
+export function retailerAudit() {
+ return BOOKS.filter(b=>!b.comingSoon).map(book=>{
+  let valid=false, specific=false;
+  try {
+   const u=new URL(book.amazonUrl);
+   valid=u.protocol==='https:'&&/(^|\\.)amazon\\.[a-z.]+$/.test(u.hostname);
+   specific=valid&&(/\\/dp\\/[A-Z0-9]{10}/i.test(u.pathname)||/\\/gp\\/product\\/[A-Z0-9]{10}/i.test(u.pathname));
+  }catch{}
+  return {id:book.id,title:book.titleEs,url:book.amazonUrl,valid,specific};
+ });
+}
