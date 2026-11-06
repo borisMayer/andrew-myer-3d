@@ -2,10 +2,12 @@ import { useEffect, useState } from 'react';
 import { AGENTS, loadTasks, saveTasks, makeTasks, qualityWarnings, exportTasksCsv, exportTasksJson, importTasksJson, retailerAudit } from '../lib/editorialAgents';
 import type { Task, TaskStatus } from '../lib/editorialAgents';
 
-export default function AgentWorkspace() {
+export default function AgentWorkspace({token}:{token:string}) {
   const [tasks,setTasks] = useState<Task[]>([]);
   const [language,setLanguage] = useState<'es'|'en'>('es');
   const [active,setActive] = useState('');
+  const [syncMessage,setSyncMessage] = useState('');
+  const [busy,setBusy] = useState(false);
   useEffect(()=>{setTasks(loadTasks());},[]);
   const update=(items:Task[])=>{setTasks(items);saveTasks(items);};
   const change=(id:string,status:TaskStatus)=>update(tasks.map(t=>t.id===id?{...t,status,updatedAt:new Date().toISOString()}:t));
@@ -25,6 +27,24 @@ export default function AgentWorkspace() {
     }catch(error){window.alert(error instanceof Error?error.message:'Invalid backup');}
   }
   const audit=retailerAudit();
+  async function sync(direction:'pull'|'push') {
+    setBusy(true);setSyncMessage('');
+    try {
+      const response=await fetch('/api/admin/editorial',{
+        method:direction==='pull'?'GET':'PUT',
+        headers:{Authorization:'Bearer '+token,'Content-Type':'application/json'},
+        ...(direction==='push'?{body:JSON.stringify({tasks})}:{})
+      });
+      const result=await response.json();
+      if(!response.ok)throw new Error(result.error||'Sync failed');
+      if(direction==='pull'){
+        if(!Array.isArray(result.tasks))throw new Error('Invalid server response');
+        update(result.tasks);setActive('');
+      }
+      setSyncMessage(direction==='pull'?'Campañas recuperadas del servidor':'Campañas guardadas en Neon');
+    }catch(error){setSyncMessage(error instanceof Error?error.message:'Error de sincronización');}
+    finally{setBusy(false);}
+  }
   const selected=tasks.find(t=>t.id===active);
   const warnings=selected?qualityWarnings(selected):[];
   return <section style={{marginTop:24,color:'#e8dfd0'}}>
@@ -39,6 +59,8 @@ export default function AgentWorkspace() {
       <button type="button" onClick={()=>download('andrew-myer-calendar.csv',exportTasksCsv(tasks),'text/csv;charset=utf-8')} disabled={!tasks.length}>Exportar CSV</button>
       <button type="button" onClick={()=>download('andrew-myer-backup.json',exportTasksJson(tasks),'application/json')} disabled={!tasks.length}>Copia de seguridad</button>
       <label style={{cursor:'pointer'}}>Restaurar JSON <input aria-label="Restaurar copia de seguridad" type="file" accept=".json,application/json" onChange={e=>{void restore(e.target.files?.[0]);e.target.value='';}} /></label>
+      <button type="button" disabled={busy} onClick={()=>{if(window.confirm('Reemplazar tareas locales con las del servidor?'))void sync('pull')}}>Recuperar de Neon</button>
+      <button type="button" disabled={busy||!tasks.length} onClick={()=>void sync('push')}>Guardar en Neon</button>
       <span>{tasks.length} tareas · {tasks.filter(t=>t.status==='approved').length} aprobadas</span>
     </div>
     <details style={{marginBottom:18,padding:12,border:'1px solid #665333',borderRadius:6}}>
@@ -46,6 +68,7 @@ export default function AgentWorkspace() {
       <p style={{fontSize:12}}>Un enlace a la página general del autor no equivale a un enlace directo de compra. Los enlaces se comprueban por formato, no mediante solicitudes de red.</p>
       {audit.map(a=><p key={a.id} style={{fontSize:12}}>{a.specific?'✓':a.valid?'⚠':'✕'} {a.title} — {a.specific?'Ficha de producto':'Revisar enlace específico'}</p>)}
     </details>
+    {syncMessage&&<p role="status">{syncMessage}</p>}
     {tasks.map(t=><button type="button" key={t.id} onClick={()=>setActive(t.id)} style={{display:'block',width:'100%',padding:12,marginBottom:8,textAlign:'left',background:'#24202b',color:'#eee',border:'1px solid #665333',borderRadius:6}}>{t.scheduledDate} · {t.title} · {t.status}</button>)}
     {selected&&<article style={{border:'1px solid #665333',padding:16,marginTop:18}}>
       <h3>{selected.title}</h3>
