@@ -1,3 +1,4 @@
+import AgentWorkspace from './AgentWorkspace';
 import { useState } from 'react';
 import { BOOKS } from '../lib/books';
 
@@ -44,6 +45,7 @@ export default function AndrewAI() {
         <button type="button" onClick={async()=>{try{await navigator.clipboard.writeText(draft);setCopied(true);}catch{setCopied(false);}}} style={{ ...field, width: 'auto', marginTop: 12, cursor: 'pointer' }}>{copied?'Copiado':'Copiar texto'}</button>
       </div>}
     </div>
+    <AgentWorkspace />
     <p style={{ color: '#aba49a', fontSize: 12 }}>Próximas fases: enlaces ASIN por libro, calendario persistente, importación KDP y aprobación editorial. No se atribuyen ventas a clics sin evidencia.</p>
   </section>;
 }
