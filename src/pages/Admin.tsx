@@ -1,3 +1,4 @@
+import AndrewAI from './AndrewAI';
 import { useState, useEffect, useCallback } from 'react';
 
 interface Book {
@@ -163,7 +164,7 @@ function BookForm({ book, token, onSave, onCancel }:{book?:Book;token:string;onS
 
 export default function Admin() {
   const [token,setToken]=useState(()=>localStorage.getItem('am_admin_token')??'');
-  const [tab,setTab]=useState<'books'|'sales'>('books');
+  const [tab,setTab]=useState<'books'|'sales'|'ai'>('books');
   const [books,setBooks]=useState<Book[]>([]);
   const [sales,setSales]=useState<Sale[]>([]);
   const [editing,setEditing]=useState<Book|null|'new'>(null);
@@ -213,9 +214,9 @@ export default function Admin() {
         </div>
         <div style={{display:'flex',gap:'0.5rem',alignItems:'center'}}>
           <a href="/" style={{fontFamily:'monospace',fontSize:'10px',color:'rgba(140,135,125,0.6)',textDecoration:'none',marginRight:'0.5rem'}}>← Sitio</a>
-          {(['books','sales'] as const).map(t=>(
+          {(['books','sales','ai'] as const).map(t=>(
             <button key={t} onClick={()=>setTab(t)} style={{padding:'0.35rem 0.85rem',background:tab===t?'rgba(180,155,90,0.14)':'transparent',border:`1px solid ${tab===t?'rgba(180,155,90,0.4)':'rgba(255,255,255,0.07)'}`,borderRadius:'3px',color:tab===t?'rgba(195,170,80,0.95)':'rgba(155,150,140,0.6)',fontSize:'11px',letterSpacing:'0.08em',fontFamily:'monospace',textTransform:'uppercase',cursor:'pointer'}}>
-              {t==='books'?'Libros':'Ventas'}
+              {t==='books'?'Libros':t==='sales'?'Ventas':'Andrew AI'}
             </button>
           ))}
           <button onClick={handleLogout} style={btnGray}>Salir</button>
@@ -230,6 +231,7 @@ export default function Admin() {
           </div>
         )}
 
+        {tab==='ai'&&<AndrewAI />}
         {tab==='books'&&(
           <>
             <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:'1.5rem'}}>
