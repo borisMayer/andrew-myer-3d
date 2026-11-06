@@ -99,7 +99,7 @@ async function sendEmail(to, name, title, dlUrl, apiKey) {
 }
 
 export default async function handler(req, res) {
-  if (req.url?.split('?')[0] === '/api/admin/editorial') return editorialHandler(req,res);
+  if (req.query?.mode === 'editorial' || req.url?.includes('mode=editorial')) return editorialHandler(req,res);
   res.setHeader('Content-Type', 'application/json');
   res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
 
