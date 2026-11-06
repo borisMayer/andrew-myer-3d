@@ -5,6 +5,10 @@
   "framework": "vite",
   "rewrites": [
     {
+      "source": "/api/admin/editorial",
+      "destination": "/api/admin/sales"
+    },
+    {
       "source": "/api/books/:id",
       "destination": "/api/books/[id]"
     },
