@@ -102,6 +102,19 @@ export default function App() {
     }
   }
 
+  // Private routes must render independently of the public 3D experience.
+  // Do not expose admin access in the public navigation.
+  if (typeof window !== 'undefined') {
+    const pathname = window.location.pathname.replace(/\\/+$/, '') || '/';
+    const hashPath = window.location.hash.replace(/^#/, '').replace(/\\/+$/, '');
+    if (pathname === '/setup-admin' || hashPath === '/setup-admin') {
+      return <Suspense fallback={<LoadingScreen />}><AdminSetup /></Suspense>;
+    }
+    if (pathname === '/admin' || pathname.startsWith('/admin/') || hashPath === '/admin' || hashPath.startsWith('/admin/')) {
+      return <Suspense fallback={<LoadingScreen />}><Admin /></Suspense>;
+    }
+  }
+
   if (isMobile || !webgl) {
     const MobileFallback = lazy(() => import('./components/ui/MobileWarning'));
     return <Suspense fallback={<LoadingScreen />}><MobileFallback /></Suspense>;
