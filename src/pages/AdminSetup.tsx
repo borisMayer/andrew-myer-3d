@@ -61,8 +61,9 @@ export default function AdminSetup() {
         <input style={s.inp} type="email" value={email} onChange={e => setEmail(e.target.value)} />
 
         <label style={s.lbl}>Contraseña</label>
-        <input style={s.inp} type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Mínimo 8 caracteres" />
+        <input style={s.inp} type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Mínimo 12 caracteres" />
 
+        <p style={{fontSize:'11px',color:'rgba(180,155,130,.8)',lineHeight:1.6}}>Esta página solo permite crear el primer administrador. Configura SETUP_KEY (24+ caracteres) y ADMIN_SECRET (32+ caracteres) en Vercel. No compartas esas claves.</p>
         <button style={s.btn} onClick={submit} disabled={loading}>
           {loading ? 'Creando…' : 'Crear admin'}
         </button>
