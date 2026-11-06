@@ -64,8 +64,9 @@ export function retailerAudit() {
   let valid=false, specific=false;
   try {
    const u=new URL(book.amazonUrl);
-   valid=u.protocol==='https:'&&/(^|\\.)amazon\\.[a-z.]+$/.test(u.hostname);
-   specific=valid&&(/\\/dp\\/[A-Z0-9]{10}/i.test(u.pathname)||/\\/gp\\/product\\/[A-Z0-9]{10}/i.test(u.pathname));
+   valid=u.protocol==='https:'&&u.hostname.toLowerCase().startsWith('www.amazon.');
+   specific=valid&&(u.pathname.includes('/dp/')||u.pathname.includes('/gp/product/'));
+
   }catch{}
   return {id:book.id,title:book.titleEs,url:book.amazonUrl,valid,specific};
  });
