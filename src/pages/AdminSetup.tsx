@@ -6,7 +6,7 @@
 import { useState } from 'react';
 
 export default function AdminSetup() {
-  const [email,    setEmail]    = useState('admin@andrewmyer.com');
+  const [email,    setEmail]    = useState('andree.myer@gmail.com');
   const [password, setPassword] = useState('');
   const [setupKey, setSetupKey] = useState('');
   const [result,   setResult]   = useState('');
