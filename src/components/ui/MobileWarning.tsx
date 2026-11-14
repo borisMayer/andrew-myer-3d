@@ -55,6 +55,8 @@ export default function MobileFallback() {
             Myer
           </span>
 
+          <p style={{fontSize:'0.72rem',color:'#c9a227',lineHeight:1.8,maxWidth:'360px',margin:'0 auto 1.5rem'}}>{isEn ? 'Doctor of Theology · Master’s in Industrial Engineering · Bachelor’s in Psychology' : 'Doctor en Teología · Magíster en Ingeniería Industrial · Licenciado en Psicología'}</p>
+
           <p style={{ fontSize: '0.9rem', color: 'rgba(226,217,243,0.6)', maxWidth: '340px', lineHeight: 1.8, marginBottom: '2.5rem', fontWeight: 300, whiteSpace: 'pre-line' }}>
             {t('hero.subtitle')}
           </p>
