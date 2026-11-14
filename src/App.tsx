@@ -146,7 +146,7 @@ export default function App() {
                   Andrew Myer
                 </p>
                 <p style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'rgba(180,155,90,0.4)' }}>
-                  Ph.D. Teología · M.A. Filosofía · Lic. Psicología
+                  {i18n.language.startsWith('en') ? 'Doctor of Theology · Master’s in Industrial Engineering · Bachelor’s in Psychology' : 'Doctor en Teología · Magíster en Ingeniería Industrial · Licenciado en Psicología'}
                 </p>
               </div>
               <div style={{ display: 'flex', gap: '2rem' }}>
