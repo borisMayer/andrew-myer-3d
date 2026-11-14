@@ -72,9 +72,9 @@ export default function HeroSection() {
         <div ref={preRef} style={{
           fontFamily: 'var(--font-serif)', fontSize: 'clamp(0.7rem, 1.2vw, 0.85rem)',
           color: 'rgba(180,155,90,0.7)', marginBottom: '0.2rem',
-          fontStyle: 'italic', letterSpacing: '0.05em', opacity: 0,
+          fontStyle: 'italic', letterSpacing: '0.05em', opacity: 0, lineHeight: 1.6,
         }}>
-          Dr. · M.Sc. · Lic.
+          {isEn ? 'Doctor of Theology · Master’s in Industrial Engineering · Bachelor’s in Psychology' : 'Doctor en Teología · Magíster en Ingeniería Industrial · Licenciado en Psicología'}
         </div>
 
         {/* Main title */}
