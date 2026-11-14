@@ -5,7 +5,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 
 export default function AuthorSection() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const sectionRef = useRef<HTMLElement>(null);
   const tags = t('author.tags', { returnObjects: true }) as string[];
 
@@ -60,7 +60,7 @@ export default function AuthorSection() {
                 Andrew Myer
               </p>
               <p style={{ fontFamily:'var(--font-mono)', fontSize:'9px', letterSpacing:'0.15em', color:'rgba(180,155,90,0.5)', marginTop:'3px', textTransform:'uppercase' }}>
-                Ph.D. Th. · M.A. Phil. · Lic. Psy.
+                {i18n.language.startsWith('en') ? 'Doctor of Theology · Master’s in Industrial Engineering · Bachelor’s in Psychology' : 'Doctor en Teología · Magíster en Ingeniería Industrial · Licenciado en Psicología'}
               </p>
             </div>
           </div>
