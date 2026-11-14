@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { AGENTS, loadTasks, saveTasks, makeTasks, qualityWarnings, exportTasksCsv, exportTasksJson, importTasksJson, retailerAudit } from '../lib/editorialAgents';
+import { AGENTS, loadTasks, saveTasks, makeTasks, makeUsLaunchTasks, qualityWarnings, exportTasksCsv, exportTasksJson, importTasksJson, retailerAudit } from '../lib/editorialAgents';
 import type { Task, TaskStatus } from '../lib/editorialAgents';
 
 export default function AgentWorkspace({token}:{token:string}) {
@@ -56,6 +56,7 @@ export default function AgentWorkspace({token}:{token:string}) {
     <div style={{margin:'22px 0',display:'flex',gap:12,flexWrap:'wrap'}}>
       <select aria-label="Idioma" value={language} onChange={e=>setLanguage(e.target.value as 'es'|'en')}><option value="es">Español</option><option value="en">English</option></select>
       <button type="button" onClick={()=>update([...tasks,...makeTasks(language)])}>Crear siete borradores</button>
+      <button type="button" onClick={()=>update([...tasks,...makeUsLaunchTasks()])}>Crear campaña EE. UU. (7 borradores EN)</button>
       <button type="button" onClick={()=>download('andrew-myer-calendar.csv',exportTasksCsv(tasks),'text/csv;charset=utf-8')} disabled={!tasks.length}>Exportar CSV</button>
       <button type="button" onClick={()=>download('andrew-myer-backup.json',exportTasksJson(tasks),'application/json')} disabled={!tasks.length}>Copia de seguridad</button>
       <label style={{cursor:'pointer'}}>Restaurar JSON <input aria-label="Restaurar copia de seguridad" type="file" accept=".json,application/json" onChange={e=>{void restore(e.target.files?.[0]);e.target.value='';}} /></label>
