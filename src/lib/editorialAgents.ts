@@ -34,6 +34,24 @@ export function makeTasks(language:'es'|'en',start:Date=new Date()):Task[] {
     return {id:`task-${Date.now()}-${i}`,agent:i===2?'seo':i===6?'sales':'social',bookId:book.id,channel,language,title:`${channel} · ${title}`,content:`${intro}\n\n${title}\n\n${description.slice(0,320)}\n\n${cta}\n${book.amazonUrl}\n\n[${language==='es'?'Revisar antes de publicar':'Review before publishing'}]`,status:'draft',scheduledDate:date.toISOString().slice(0,10),createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()} as Task;
   });
 }
+/** US organic launch: editorial drafts, not ads or automatic social posts. */
+export function makeUsLaunchTasks(start:Date=new Date()):Task[] {
+  const picks=[
+    {bookId:'entre-dos-mundos-vol1',channel:'Instagram' as Channel,agent:'social' as AgentId,hook:'What changes when a life is interrupted?',body:'Between Two Worlds, Vol. I recounts an intensive-care experience during the COVID-19 pandemic and reflects on faith, mortality, and meaning.'},
+    {bookId:'entre-dos-mundos-vol1',channel:'Facebook' as Channel,agent:'editorial' as AgentId,hook:'A story of survival and spiritual reflection',body:'Andrew Myer explores a personal journey through critical illness and the questions that follow. For readers interested in faith, testimony, and the search for meaning.'},
+    {bookId:'jesucristo-leon-de-juda',channel:'Blog' as Channel,agent:'seo' as AgentId,hook:'Reformed Theology and the Question of Divine Creation',body:'Explore Andrew Myer’s theological work on Christology, divine creation, and the concept of Tzimtzum. This introduction presents the author’s interpretation, not a consensus scholarly position.'},
+    {bookId:'el-renacido',channel:'YouTube' as Channel,agent:'social' as AgentId,hook:'Can a crisis reshape the way we understand freedom?',body:'Video script outline: introduce the author’s experience, describe the themes of spiritual renewal in The Reborn, and invite viewers to explore the book. Use original visuals and narration.'},
+    {bookId:'entre-dos-mundos-vol1',channel:'TikTok' as Channel,agent:'social' as AgentId,hook:'One question after surviving a life-changing illness',body:'Short-form video concept: a 20–30 second reflection on mortality and purpose, grounded in the author’s account. Avoid medical or supernatural claims presented as proven facts.'},
+    {bookId:'narcisismo-primera-ley-cristalizacion',channel:'Instagram' as Channel,agent:'editorial' as AgentId,hook:'What happens when theology meets the study of narcissism?',body:'Andrew Myer approaches narcissism through theological, philosophical, and psychoanalytic lenses. This book presents an interpretive framework, not a clinical diagnostic guide.'},
+    {bookId:'jesucristo-leon-de-juda',channel:'Facebook' as Channel,agent:'sales' as AgentId,hook:'Explore a different perspective on Christology',body:'Discover a theological exploration of the Lion of Judah and Tzimtzum, written for readers interested in systematic theology and religious philosophy.'}
+  ];
+  return picks.map((item,i)=>{
+    const book=BOOKS.find(b=>b.id===item.bookId)!;
+    const date=new Date(start);date.setDate(start.getDate()+i+1);
+    const now=new Date().toISOString();
+    return {id:`us-launch-${Date.now()}-${i}`,agent:item.agent,bookId:book.id,channel:item.channel,language:'en' as const,title:`US launch · ${item.channel} · ${book.titleEn}`,content:`${item.hook}\n\n${item.body}\n\nExplore Andrew Myer's books: https://www.andrewmyer.com/\n\n#AndrewMyer #Books #Reading\n\n[Review copy, destination and US audience fit before publishing]`,status:'draft' as const,scheduledDate:date.toISOString().slice(0,10),createdAt:now,updatedAt:now};
+  });
+}
 export function qualityWarnings(task:Task):string[] {
  const warnings:string[]=[];
  if(!task.content.trim())warnings.push('Empty content');
